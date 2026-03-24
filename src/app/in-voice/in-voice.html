@@ -1,0 +1,104 @@
+<div class="container my-2 p-5 border bg-white shadow-sm">
+
+  <div class="row ">
+    <div class="col-6">
+      <div class="row">
+      <div class="col-3">
+      <div class="text-white p-2 d-inline-block mb-2 ">
+       <img [ngSrc]="'assets/Images/logo.jpg'" width="150" height="150" alt="Logo"  priority/>     
+      </div>
+    </div>
+    <div class="col-9">
+      <h2 class="fw-bold" > Invoice </h2>
+      <p class="mb-1"><strong>Asia Medialine (M) Sdn Bhd</strong></p>
+      <p class="mb-0 small"> <strong>Phone :</strong> 89764523100 </p>
+      <p class="mb-0 small"> <strong>Email :</strong> Elec123@gmail.com</p>
+        <small > <strong> Address : </strong> 401, Building No.X, near by shcool , abc City , India </small>
+    </div>
+    </div>
+    </div>
+    <div class="col-6 text-end">
+      <p class="mb-0">Invoice no: <strong>INV0001</strong></p>
+      <p class="mb-0">Date: 20/03/2026</p>
+      <p>Due Date: 23/03/2026</p>
+    </div>
+  </div>
+  <hr>
+
+  <div class="row mb-3">
+    <div class="col-12">
+      <h6>Bill To:</h6>
+      <p class="mb-1"><strong>Row jewellers CO.LTD</strong></p>
+      <p class="mb-0 small"> <strong>Phone :</strong> 98762543210 </p>
+      <p class="mb-0 small"> <strong>Email :</strong> abc123@gmail.com</p>
+      <p class="small"><strong>Address :</strong> D 401, Shivay icon , near by AB Bank , abc City , India </p>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table border-1">
+      <thead class="table-dark text-white">
+        <tr>
+          <th>Description</th>
+          <th class="text-center">Rate</th>
+          <th class="text-center">Quantity</th>
+          <th class="text-center">Discount</th>
+          <th class="text-center">Tax</th>
+          <th class="text-end">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of invoiceItems">
+          <td>{{item.description}}</td>
+          <td class="text-center">${{item.rate | number:'1.2-2'}}</td>
+          <td class="text-center">{{item.quantity}}</td>
+          <td class="text-center">{{item.discount}}%</td>
+          <td class="text-center">{{item.tax}}%</td>
+          <td class="text-end">${{item.amount | number:'1.2-2'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row mt-4">
+
+    <div class="col-7">
+      <h5>Payment Instructions</h5>
+      <p class="small mb-1"><strong>PayPal:</strong> abc123@gmail.com</p>
+      <p class="small"><strong>Bank Transfer:</strong> abc123@gmail.com</p>
+    </div>
+
+
+    <div class="col-5">
+      <div class="d-flex justify-content-between mb-1">
+        <span>Subtotal</span>
+        <span>${{ getSubtotal() | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="d-flex justify-content-between text-muted mb-1 small">
+        <span>Discount</span>
+        <span>-${{ getDiscount() | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="d-flex justify-content-between text-muted mb-1 small">
+        <span>Tax</span>
+        <span>${{ getTax() | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="d-flex justify-content-between text-muted border-bottom pb-2 mb-2 small">
+        <span>Shipping</span>
+        <span>${{ shipping | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="d-flex justify-content-between fw-bold h5">
+        <span>Total</span>
+        <span>${{ getTotal() | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="bg-secondary p-2 d-flex justify-content-between fw-bold">
+        <span>Balance Due</span>
+        <span>${{ getTotal() | number:'1.2-2' }}</span>
+      </div>
+    </div>
+  </div>
+</div>
