@@ -1,0 +1,71 @@
+<div class="container mt-4">
+
+    @if (item; as invoiceItem) {
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Invoice Item Details</h3>
+            <button class="btn btn-light btn-sm" (click)="closeCard()">✖</button>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <strong>ID:</strong> {{ invoiceItem.id }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Client ID:</strong> {{ invoiceItem.clientId }}
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <strong>Company ID:</strong> {{ invoiceItem.compId }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Description:</strong> {{ invoiceItem.description }}
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <strong>Rate:</strong> {{ invoiceItem.rate | currency:'INR' }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Quantity:</strong> {{ invoiceItem.quantity }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Discount:</strong> {{ invoiceItem.discount }}%
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <strong>Tax:</strong> {{ invoiceItem.tax }}%
+                </div>
+                <div class="col-md-4">
+                    <strong>Total Amount:</strong>
+                    {{ invoiceItem.amount | currency:'INR' }}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-footer d-flex justify-content-between">
+
+            <button class="btn btn-secondary" routerLink="/item">
+                ← Back to List
+            </button>
+        </div>
+
+    </div>
+    } @else {
+    <div class="text-center mt-5">
+        <p>Loading invoice item details...</p>
+    </div>
+    }
+
+</div>

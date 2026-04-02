@@ -1,0 +1,83 @@
+<div class="container mt-4">
+
+    @if (client; as clientItem) {
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Client Details</h3>
+            <button class="btn btn-light btn-sm" (click)="closeCard()">✖</button>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <strong>ID:</strong> {{ clientItem.id }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Invoice No:</strong> {{ clientItem.invoiceNo }}
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <strong>Client Name:</strong> {{ clientItem.clientName }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Bill To:</strong> {{ clientItem.billTo }}
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <strong>Phone:</strong> {{ clientItem.phone }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Mobile:</strong> {{ clientItem.mobile }}
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <strong>Email:</strong> {{ clientItem.email }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Company ID:</strong> {{ clientItem.compId }}
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-12">
+                    <strong>Address:</strong> {{ clientItem.address }}
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <strong>Date:</strong> {{ clientItem.date | date:'yyyy-MM-dd' }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Due Date:</strong> {{ clientItem.dueDate | date:'yyyy-MM-dd' }}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-footer d-flex justify-content-between">
+            <button class="btn btn-secondary" routerLink="/client">
+                ← Back to List
+            </button>
+        </div>
+
+    </div>
+    } @else {
+    <div class="text-center mt-5">
+        <p>Loading client details...</p>
+    </div>
+    }
+
+</div>

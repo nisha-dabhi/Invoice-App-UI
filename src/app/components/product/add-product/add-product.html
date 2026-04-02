@@ -1,0 +1,253 @@
+<div class="container mt-4">
+
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+    <div>
+      <h3 class="mb-1">Products Dashboard</h3>
+      <div class="text-muted">
+        Live Product Monitoring Dashboard — Search, Filter, Paginate & View Details
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow mb-4" *ngIf="showForm">
+    <div class="card-header d-flex justify-content-between align-items-center"
+          style="background: linear-gradient(90deg, #224abe , #4e73df); color: white;">
+          <strong>{{ isEdit ? 'Edit Product' : 'Add Product' }}</strong>
+      <button class="btn btn-light btn-sm" (click)="closeCard()">✖</button>
+    </div>
+    <div class="card-body">
+      <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
+        <div class="row">
+
+          <div class="col-md-4 mb-3">
+            <label>Product Name<span class="text-danger">*</span></label>
+            <input type="text" name="productName" [(ngModel)]="product.productName" required minlength="2"
+              #productName="ngModel" [class.is-invalid]="productName.invalid && productName.touched"
+              class="form-control" placeholder="Enter product name">
+            <div class="invalid-feedback">
+              <span *ngIf="productName.errors?.['required']">Product name is required.</span>
+              <span *ngIf="productName.errors?.['minlength']">Minimum 2 characters required.</span>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label>Category<span class="text-danger">*</span></label>
+            <input type="text" name="category" [(ngModel)]="product.category" required minlength="2" #category="ngModel"
+              [class.is-invalid]="category.invalid && category.touched" class="form-control"
+              placeholder="Enter category">
+            <div class="invalid-feedback">
+              <span *ngIf="category.errors?.['required']">Category is required.</span>
+              <span *ngIf="category.errors?.['minlength']">Minimum 2 characters required.</span>
+            </div>
+          </div>          
+
+          <div class="col-md-4 mb-3">
+            <label>Price<span class="text-danger">*</span></label>
+            <input type="number" name="price" [(ngModel)]="product.price" required min="0.01" step="0.01"
+              #price="ngModel" [class.is-invalid]="price.invalid && price.touched" class="form-control"
+              placeholder="0.00">
+            <div class="invalid-feedback">
+              <span *ngIf="price.errors?.['required']">Price is required.</span>
+              <span *ngIf="price.errors?.['min']">Price must be greater than 0.</span>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label>Stock</label>
+            <input type="number" name="stock" [(ngModel)]="product.stock" min="0" #stock="ngModel"
+              [class.is-invalid]="stock.invalid && stock.touched" class="form-control" placeholder="0">           
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label>Status<span class="text-danger">*</span></label>
+            <select name="status" [(ngModel)]="product.status"  required #status="ngModel"
+              [class.is-invalid]="status.invalid && status.touched" class="form-control">
+              <option value="" >-- Select Status --</option>
+              <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+            </select>
+            <div class="invalid-feedback">
+              <span *ngIf="status.errors?.['required']">Please select a status.</span>
+            </div>
+          </div>
+
+          <div class="col-md-8 mb-3">
+            <label>Description<span class="text-danger">*</span></label>
+            <textarea name="description" [(ngModel)]="product.description" required minlength="5" #description="ngModel"
+              [class.is-invalid]="description.invalid && description.touched" class="form-control" rows="2"
+              placeholder="Enter description"></textarea>
+            <div class="invalid-feedback">
+              <span *ngIf="description.errors?.['required']">Description is required.</span>
+              <span *ngIf="description.errors?.['minlength']">Minimum 5 characters required.</span>
+            </div>
+          </div>
+
+        </div>
+        <button type="submit" class="btn btn-primary me-2" [disabled]="productForm.invalid">
+          {{ isEdit ? 'Update' : 'Save' }}
+        </button>
+        <button type="button" class="btn btn-secondary me-2" (click)="resetForm()">
+          Reset
+        </button>
+        <button type="button" class="btn btn-danger" (click)="closeCard()">Close</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card border-1 shadow-sm mb-3">
+    <div class="card-body">
+      <div class="card shadow mb-3">
+        <div class="card-body">
+          <div class="row g-2 align-items-center">
+
+            <div class="col-12 col-lg-5">
+              <div class="input-group">
+                <span class="input-group-text">Search</span>
+                <input class="form-control" [value]="searchText" (input)="onSearchChange($any($event.target).value)"
+                  placeholder="Search by name, category, status..." />
+                <button class="btn btn-primary" type="button" (click)="clearSearch()" [disabled]="!searchText.trim()">
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            <div class="col-12 col-lg-5">
+              <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-sm" [class]="selectedStatus.length === 0 ? 'btn-dark' : 'btn-outline-dark'"
+                  (click)="resetStatus()">All</button>
+                <button class="btn btn-sm"
+                  [class]="selectedStatus.includes('Available') ? 'btn-success' : 'btn-outline-success'"
+                  (click)="setStatus('Available')">Available</button>
+                <button class="btn btn-sm"
+                  [class]="selectedStatus.includes('Low Stock') ? 'btn-warning text-dark' : 'btn-outline-warning'"
+                  (click)="setStatus('Low Stock')">Low Stock</button>
+                <button class="btn btn-sm"
+                  [class]="selectedStatus.includes('Stock Out') ? 'btn-danger' : 'btn-outline-danger'"
+                  (click)="setStatus('Stock Out')">Stock Out</button>
+                <button class="btn btn-sm"
+                  [class]="selectedStatus.includes('On the Way') ? 'btn-info text-dark' : 'btn-outline-info'"
+                  (click)="setStatus('On the Way')">On the Way</button>
+              </div>
+            </div>
+
+            <div class="col-12 col-lg-2">
+              <div class="d-flex justify-content-lg-end align-items-center gap-2">
+                <span class="text-muted small">Rows:</span>
+                <select class="form-select form-select-sm w-auto" [value]="pageSize"
+                  (change)="changePageSize($any($event.target).value)">
+                  <option *ngFor="let s of pageSizeOptions" [value]="s">{{ s }}</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center"
+          style="background: linear-gradient(90deg, #4e73df, #224abe); color: white;">
+          <strong>Product List</strong>
+          <button class="btn btn-light btn-sm fw-semibold shadow-sm" style="color:#224abe;" (click)="openForm()">
+            + Add Product
+          </button>
+        </div>
+        <div class="card-body table-responsive">
+          <table class="table table-bordered table-hover text-center align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of pagedProducts; trackBy: trackById; let i = index">
+                <td>{{ startRecordIndex + i }}</td>
+                <td>{{ p.productName }}</td>
+                <td>{{ p.category }}</td>
+                <td>{{ p.price | currency }}</td>
+                <td><span class="badge rounded-pill text-bg-light border text-dark">{{ p.stock }}</span></td>
+                <td><span class="badge" [ngClass]="getStatusBadgeClass(p.status)">{{ p.status }}</span></td>
+                <td>{{ p.description }}</td>
+                <td>
+                  <button class="btn btn-warning btn-sm me-1" (click)="editProduct(p)">✏️ Edit</button>
+                  <button class="btn btn-secondary btn-sm me-1" (click)="openModal(p)">📄 Details</button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteProduct(p.id)">❌ Delete</button>
+                </td>
+              </tr>
+              <tr *ngIf="pagedProducts.length === 0">
+                <td colspan="8" class="text-muted">No products found.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <small class="text-muted">
+              Showing {{ startRecordIndex }}–{{ endRecordIndex }} of {{ totalRecords }} records
+            </small>
+            <div class="btn-group btn-group-sm">
+              <button class="btn btn-outline-secondary" (click)="firstPage()" [disabled]="isFirstPage">««</button>
+              <button class="btn btn-outline-secondary" (click)="prevPage()" [disabled]="isFirstPage">‹</button>
+              <button class="btn btn-outline-secondary" disabled>{{ currentPage }} / {{ totalPages }}</button>
+              <button class="btn btn-outline-secondary" (click)="nextPage()" [disabled]="isLastPage">›</button>
+              <button class="btn btn-outline-secondary" (click)="lastPage()" [disabled]="isLastPage">»»</button>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+      <div class="modal fade show d-block" tabindex="-1" *ngIf="selectedProduct" style="background:rgba(0,0,0,0.5)">
+        <div class="modal-dialog ">
+          <div class="modal-content mt-2">
+            <div class="modal-header bg-primary text-white">
+              <h5 class="modal-title">Product Details</h5>
+              <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table table-bordered mb-0">
+                <tbody>
+                  <tr>
+                    <th>Product Name</th>
+                    <td>{{ selectedProduct.productName }}</td>
+                  </tr>
+                  <tr>
+                    <th>Category</th>
+                    <td>{{ selectedProduct.category }}</td>
+                  </tr>
+                  <tr>
+                    <th>Price</th>
+                    <td>{{ selectedProduct.price | currency }}</td>
+                  </tr>
+                  <tr>
+                    <th>Stock</th>
+                    <td><span class="badge rounded-pill text-bg-light border text-dark">{{ selectedProduct.stock
+                        }}</span></td>
+                  </tr>
+                  <tr>
+                    <th>Status</th>
+                    <td><span class="badge" [ngClass]="getStatusBadgeClass(selectedProduct.status)">{{
+                        selectedProduct.status }}</span></td>
+                  </tr>
+                  <tr>
+                    <th>Description</th>
+                    <td>{{ selectedProduct.description }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

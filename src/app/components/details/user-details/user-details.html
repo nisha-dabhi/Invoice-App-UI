@@ -1,0 +1,63 @@
+<div class="container mt-4">
+
+    @if (user; as userItem) {
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">User Details</h3>
+            <button class="btn btn-light btn-sm " (click)="closeCard()">✖</button>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <strong>ID:</strong> {{ userItem.id }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Company ID:</strong> {{ userItem.compId }}
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <strong>First Name:</strong> {{ userItem.firstName }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Last Name:</strong> {{ userItem.lastName }}
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <strong>Phone:</strong> {{ userItem.phone }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Email:</strong> {{ userItem.email }}
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-12">
+                    <strong>Password:</strong> {{ userItem.password }}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-footer d-flex justify-content-between">
+            <button class="btn btn-secondary" routerLink="/user">
+                ← Back to List
+            </button>
+        </div>
+
+    </div>
+    } @else {
+    <div class="text-center mt-5">
+        <p>Loading user details...</p>
+    </div>
+    }
+
+</div>
