@@ -1,0 +1,156 @@
+<div class="container mt-4">
+    <div class="card shadow mb-4" *ngIf="showForm">
+        <div class="card-header d-flex justify-content-between align-items-center"
+            style="background: linear-gradient(90deg, #3b3b6b, #3a5080); color:white;">
+            <span>{{ isEdit ? 'Edit Invoice' : 'Add Invoice' }}</span>
+            <button class="btn btn-light btn-sm" (click)="closeCard()">✖</button>
+        </div>
+        <div class="card-body">
+            <form #invoiceForm="ngForm">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Invoice No<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" [(ngModel)]="invoice.invoiceNo" name="invoiceNo"
+                            required #invoiceNo="ngModel">
+                        <div class="text-danger" *ngIf="invoiceNo.invalid && invoiceNo.touched">
+                            <small>Invoice No is required</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" [(ngModel)]="invoice.date" name="date" required
+                            #date="ngModel">
+                        <div class="text-danger" *ngIf="date.invalid && date.touched">
+                            <small>Date is required</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Due Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" [(ngModel)]="invoice.dueDate" name="dueDate" required
+                            #dueDate="ngModel">
+                        <div class="text-danger" *ngIf="dueDate.invalid && dueDate.touched">
+                            <small>Due Date is required</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Company<span class="text-danger">*</span></label>
+                        <select class="form-control" [(ngModel)]="invoice.compId" name="compId" required
+                            #compId="ngModel">
+                            <option value="">-- Select Company --</option>
+                            <option *ngFor="let c of companies" [value]="c.id">{{ c.companyName }}</option>
+                        </select>
+                        <div class="text-danger" *ngIf="compId.invalid && compId.touched">
+                            <small>Select company</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Client<span class="text-danger">*</span></label>
+                        <select class="form-control" [(ngModel)]="invoice.clientId" name="clientId" required
+                            #clientId="ngModel">
+                            <option value="">-- Select Client --</option>
+                            <option *ngFor="let c of clients" [value]="c.id">{{ c.clientName }}</option>
+                        </select>
+                        <div class="text-danger" *ngIf="clientId.invalid && clientId.touched">
+                            <small>Select client</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Total Amount<span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" [(ngModel)]="invoice.totalAmount" name="totalAmount"
+                            required #totalAmount="ngModel">
+                        <div class="text-danger" *ngIf="totalAmount.invalid && totalAmount.touched">
+                            <small>Amount required</small>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary me-2" (click)="addInvoice()" [disabled]="invoiceForm.invalid">
+                    {{ isEdit ? 'Update' : 'Save' }}
+                </button>
+                <button type="button" class="btn btn-secondary me-2" (click)="resetForm()">Reset</button>
+                <button type="button" class="btn btn-danger" (click)="closeCard()">Close</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center"
+            style="background: linear-gradient(90deg, #3a5080, #3b3b6b); color:white;">
+            <strong>Invoice List</strong>
+            <button class="btn btn-light btn-sm fw-semibold shadow-sm" style="color:#3a5080;" (click)="openForm()">+ Add
+                Invoice</button>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-bordered table-hover text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>Invoice No</th>
+                        <th>Date</th>
+                        <th>Due Date</th>
+                        <th>Company</th>
+                        <th>Client</th>
+                        <th>Total Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let inv of invoices">
+                        <td>{{ inv.invoiceNo }}</td>
+                        <td>{{ inv.date | date }}</td>
+                        <td>{{ inv.dueDate | date }}</td>
+                        <td>{{ getCompanyName(inv.compId) }}</td>
+                        <td>{{ getClientName(inv.clientId) }}</td>
+                        <td>{{ inv.totalAmount | currency }}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm me-1" (click)="editInvoice(inv)">✏️ Edit</button>
+                            <button class="btn btn-secondary btn-sm me-1" (click)="openModal(inv)">📄Details</button>
+                            <button class="btn btn-danger btn-sm" (click)="deleteInvoice(inv.id)">❌ Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal fade show d-block" tabindex="-1" *ngIf="detInvoice" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow">
+                <div class="modal-header" style="background: linear-gradient(90deg, #3b3b6b, #3a5080); color: white;">
+                    <h5 class="modal-title">Invoice Details</h5>
+                    <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                            <tr>
+                                <th style="width: 40%;">Invoice No</th>
+                                <td>{{ detInvoice.invoiceNo }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date</th>
+                                <td>{{ detInvoice.date | date:'mediumDate' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Due Date</th>
+                                <td>{{ detInvoice.dueDate | date:'mediumDate' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Company</th>
+                                <td>{{ getCompanyName(detInvoice.compId) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Client</th>
+                                <td>{{ getClientName(detInvoice.clientId) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Amount</th>
+                                <td>{{ detInvoice.totalAmount | currency }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

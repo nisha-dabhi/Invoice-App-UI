@@ -21,17 +21,20 @@ export class AddUser {
   users: User[] = [];
   companies: { id: number; companyName: string }[] = [];
   companyName: string = '';
+  detailUser: User | null = null;
+  showDetail = false;
 
-  constructor(private companyService: CompanyService  , private service: UserService, private router: Router , private toastr: ToastrService) { }
+  constructor(private companyService: CompanyService, private service: UserService, private router: Router, private toastr: ToastrService) { }
 
   ngOnInit() {
-    this.loadUsers();   
-    this.loadCompanies(); 
+    this.loadUsers();
+    this.loadCompanies();
   }
 
   loadUsers() {
     this.service.getAllUsers().subscribe(res => {
       this.users = res;
+
     });
   }
 
@@ -48,12 +51,14 @@ export class AddUser {
 
   addUser() {
     if (this.isEdit) {
+
       this.service.updateUser(this.user.id, this.user).subscribe(() => {
         alert('Updated Successfully');
         this.toastr.success('User updated successfully!', 'Updated');
         this.loadUsers();
       });
     } else {
+      debugger
       this.service.addUser(this.user).subscribe(() => {
         alert('Saved Successfully');
         this.toastr.success('User added successfully!', 'Success');
@@ -71,7 +76,7 @@ export class AddUser {
       });
     }
   }
-
+ 
   updateUser(u: User) {
     this.user = { ...u };
     this.isEdit = true;
@@ -93,8 +98,14 @@ export class AddUser {
     return true;
   }
 
-  detailUser(id: number) {
-    this.router.navigate(['/user/details', id]);
+  openModal(user: User) {
+    this.detailUser = user;
+    this.showDetail = true;
+  }
+
+  closeModal() {
+    this.detailUser = null;
+    this.showDetail = false;
   }
 
   resetForm() {
@@ -106,10 +117,10 @@ export class AddUser {
     this.isEdit = false;
   }
 
-   openForm() {
-      this.user = {} as User;
-      this.isEdit = false;
-    }
+  openForm() {
+    this.user = {} as User;
+    this.isEdit = false;
+  }
 
   get f() { return this.userForm.controls; }
   showPassword = false;

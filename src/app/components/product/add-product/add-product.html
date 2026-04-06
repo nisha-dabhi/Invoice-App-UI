@@ -11,8 +11,8 @@
 
   <div class="card shadow mb-4" *ngIf="showForm">
     <div class="card-header d-flex justify-content-between align-items-center"
-          style="background: linear-gradient(90deg, #224abe , #4e73df); color: white;">
-          <strong>{{ isEdit ? 'Edit Product' : 'Add Product' }}</strong>
+      style="background: linear-gradient(90deg, #224abe , #4e73df); color: white;">
+      <strong>{{ isEdit ? 'Edit Product' : 'Add Product' }}</strong>
       <button class="btn btn-light btn-sm" (click)="closeCard()">✖</button>
     </div>
     <div class="card-body">
@@ -39,7 +39,7 @@
               <span *ngIf="category.errors?.['required']">Category is required.</span>
               <span *ngIf="category.errors?.['minlength']">Minimum 2 characters required.</span>
             </div>
-          </div>          
+          </div>
 
           <div class="col-md-4 mb-3">
             <label>Price<span class="text-danger">*</span></label>
@@ -55,14 +55,14 @@
           <div class="col-md-4 mb-3">
             <label>Stock</label>
             <input type="number" name="stock" [(ngModel)]="product.stock" min="0" #stock="ngModel"
-              [class.is-invalid]="stock.invalid && stock.touched" class="form-control" placeholder="0">           
+              [class.is-invalid]="stock.invalid && stock.touched" class="form-control" placeholder="0">
           </div>
 
           <div class="col-md-4 mb-3">
             <label>Status<span class="text-danger">*</span></label>
-            <select name="status" [(ngModel)]="product.status"  required #status="ngModel"
+            <select name="status" [(ngModel)]="product.status" required #status="ngModel"
               [class.is-invalid]="status.invalid && status.touched" class="form-control">
-              <option value="" >-- Select Status --</option>
+              <option value="">-- Select Status --</option>
               <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
             </select>
             <div class="invalid-feedback">
@@ -204,9 +204,9 @@
       </div>
 
       <div class="modal fade show d-block" tabindex="-1" *ngIf="selectedProduct" style="background:rgba(0,0,0,0.5)">
-        <div class="modal-dialog ">
-          <div class="modal-content mt-2">
-            <div class="modal-header bg-primary text-white">
+        <div class="modal-dialog  modal-dialog-centered">
+          <div class="modal-content shadow">
+            <div class="modal-header" style="background: linear-gradient(90deg, #4e73df, #224abe); color: white;">
               <h5 class="modal-title">Product Details</h5>
               <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
             </div>
@@ -250,4 +250,6 @@
       </div>
     </div>
   </div>
+
+
 </div>

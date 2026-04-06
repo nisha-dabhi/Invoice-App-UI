@@ -20,6 +20,8 @@ export class AddClient {
   clients: Client[] = [];
   companies: { id: number; companyName: string }[] = [];
   companyName: string = '';
+  detailClient: Client | null = null;
+  showDetail = false;
 
   constructor(private companyService: CompanyService, private service: ClientService, private router: Router, private toastr: ToastrService) { }
 
@@ -80,8 +82,15 @@ export class AddClient {
     this.isEdit = false;
   }
 
-  detailClient(id: number) {
-    this.router.navigate(['/client/details', id]);
+
+  openModal(client: Client) {
+    this.detailClient = client;
+    this.showDetail = true;
+  }
+
+  closeModal() {
+    this.detailClient = null;
+    this.showDetail = false;
   }
 
   today: string = new Date().toISOString().split('T')[0];

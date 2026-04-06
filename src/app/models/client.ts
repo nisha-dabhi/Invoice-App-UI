@@ -1,13 +1,10 @@
 export interface Client {
-    id: number;
-    invoiceNo : string;
+    id: number;   
     clientName? : string;
     billTo : string;
     phone : string;
     mobile?: string;
     email : string;
     address : string;
-    date : Date;
-    dueDate : Date;
     compId : number;
 }

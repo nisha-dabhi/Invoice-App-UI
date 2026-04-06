@@ -156,8 +156,6 @@ export class AddProduct {
     return product.id;
   }
 
-
-
   get totalRecords() {
     return this.filteredProducts.length;
   }

@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { InvoiceItem } from '../models/InvoiceItem';
 import { CommonModule, DecimalPipe, NgOptimizedImage } from '@angular/common';
 import { CompanyService } from '../services/company-service';
 import { Company } from '../models/company';
 import { Client } from '../models/client';
 import { ClientService } from '../services/client-service';
-import { InvoiceItemService } from '../services/invoice-item-service';
+import { Invoice } from '../models/invoice'; 
+import { InvoiceService } from '../services/invoice-service';
 
 @Component({
   selector: 'app-in-voice',
@@ -18,38 +18,38 @@ export class InvoiceComponent {
 
   private _clientService = inject(ClientService);
   private _companyService = inject(CompanyService);
-  private _itemService = inject(InvoiceItemService);
+  private _invoiceService = inject(InvoiceService);
 
   companies: Company[] = [];
   clients: Client[] = [];
-  invoiceItems: InvoiceItem[] = [];
+  invoices: Invoice[] = [];
 
   shipping: number = 100; 
 
-  getSubtotal(): number {
-    return this.invoiceItems.reduce((sum, item) => {
-      return sum + (item.rate * item.quantity);
-    }, 0);
-  }
+  // getSubtotal(): number {
+  //   return this.invoices.reduce((sum, item) => {
+  //     return sum + (item.rate * item.quantity);
+  //   }, 0);
+  // }
 
-  getDiscount(): number {
-    return this.invoiceItems.reduce((sum, item) => {
-      const base = item.rate * item.quantity;
-      return sum + (base * item.discount / 100);
-    }, 0);
-  } 
+  // getDiscount(): number {
+  //   return this.invoiceItems.reduce((sum, item) => {
+  //     const base = item.rate * item.quantity;
+  //     return sum + (base * item.discount / 100);
+  //   }, 0);
+  // } 
 
-  getTax(): number {
-    return this.invoiceItems.reduce((sum, item) => {
-      const base = item.rate * item.quantity;
-      const afterDiscount = base - (base * item.discount / 100);
-      return sum + (afterDiscount * item.tax / 100);
-    }, 0);
-  }
+  // getTax(): number {
+  //   return this.invoiceItems.reduce((sum, item) => {
+  //     const base = item.rate * item.quantity;
+  //     const afterDiscount = base - (base * item.discount / 100);
+  //     return sum + (afterDiscount * item.tax / 100);
+  //   }, 0);
+  // }
 
-  getTotal(): number {
-    return this.getSubtotal() - this.getDiscount() + this.getTax() + this.shipping;
-  }
+  // getTotal(): number {
+  //   return this.getSubtotal() - this.getDiscount() + this.getTax() + this.shipping;
+  // }
   
   subtotal = 0;
   discountVal = 0;
@@ -59,8 +59,8 @@ export class InvoiceComponent {
   ngOnInit(): void {
     this.getCompanies();
     this.getClients();
-    this.getItems();
-    this.calculateSummary();
+    this.getInvoices();
+    // this.calculateSummary();
   }
 
   getCompanies(): void {
@@ -87,11 +87,11 @@ export class InvoiceComponent {
     });
   }
 
-  getItems(): void{
-     this._itemService.getAllItem().subscribe({
+  getInvoices(): void{
+     this._invoiceService.getAllInvoice().subscribe({
       next: (data) => {
-        this.invoiceItems = data;
-        console.log('Items loaded:', this.invoiceItems);
+        this.invoices = data;
+        console.log('Items loaded:', this.invoices);
       },
       error: (err) => {
         console.error('Fetch error:', err);
@@ -100,11 +100,11 @@ export class InvoiceComponent {
   }
 
 
-  calculateSummary() {
-    this.subtotal = this.getSubtotal();
-    this.discountVal = this.getDiscount();
-    this.taxVal = this.getTax();
-    this.total = this.getTotal();
-  }
+  // calculateSummary() {
+  //   this.subtotal = this.getSubtotal();
+  //   this.discountVal = this.getDiscount();
+  //   this.taxVal = this.getTax();
+  //   this.total = this.getTotal();
+  // }
 
 }

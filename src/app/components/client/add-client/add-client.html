@@ -11,15 +11,7 @@
       <form #clientForm="ngForm">
 
         <div class="row">
-          <div class="col-md-4 mb-3">
-            <label>Invoice No<span class="text-danger">*</span></label>
-            <input type="text" class="form-control" placeholder="Enter InvoiceNo" [(ngModel)]="client.invoiceNo"
-              name="invoiceNo" #invoiceNo="ngModel" required>
-
-            <div class="text-danger" *ngIf="invoiceNo.invalid && (invoiceNo.dirty || invoiceNo.touched)">
-              <small *ngIf="invoiceNo.errors?.['required']">Invoice No is required</small>
-            </div>
-          </div>
+       
           <div class="col-md-4 mb-3">
             <label>Client Name<span class="text-danger">*</span></label>
             <input type="text" class="form-control" [(ngModel)]="client.clientName" name="clientName"
@@ -65,36 +57,13 @@
           <div class="col-md-4 mb-3">
             <label>Email<span class="text-danger">*</span></label>
             <input type="email" class="form-control" [(ngModel)]="client.email" name="email" placeholder="Enter client email" #email="ngModel" required
-              email>
+              email >
             <div class="text-danger" *ngIf="email.invalid && email.touched">
               <small *ngIf="email.errors?.['required']">Email is required</small>
               <small *ngIf="email.errors?.['email']">Invalid email format</small>
             </div>
           </div>
-
-          <div class="row">
-
-            <div class="col-md-4 mb-3">
-              <label>Date<span class="text-danger">*</span></label>
-              <input type="date" class="form-control" [(ngModel)]="client.date" placeholder="Enter date" name="date" #invoiceDate="ngModel"
-                required max="today">
-
-              <div class="text-danger" *ngIf="invoiceDate.invalid && (invoiceDate.dirty || invoiceDate.touched)">
-                <small *ngIf="invoiceDate.errors?.['required']">Invoice date is required</small>
-              </div>
-            </div>
-
-
-            <div class="col-md-4 mb-3">
-              <label>Due Date<span class="text-danger">*</span></label>
-              <input type="date" class="form-control" [(ngModel)]="client.dueDate" placeholder="Enter dueDate" name="dueDate" #dueDate="ngModel"
-                required [min]="client.date || today">
-
-              <div class="text-danger" *ngIf="dueDate.invalid && (dueDate.dirty || dueDate.touched)">
-                <small *ngIf="dueDate.errors?.['required']">Due date is required</small>
-                <small *ngIf="dueDate.errors?.['min']">Due date cannot be before invoice date</small>
-              </div>
-            </div>
+          
 
             <div class="col-md-4 mb-3">
               <label>Company Name<span class="text-danger">*</span></label>
@@ -109,7 +78,6 @@
                 <small>Please select a company.</small>
               </div>
             </div>
-          </div>
 
           <div class="col-md-12 mb-3">
             <label>Address<span class="text-danger">*</span></label>
@@ -153,14 +121,11 @@
       <table class="table table-bordered table-hover text-center">
         <thead class="table-light">
           <tr>
-            <th>InvoiceNo</th>
             <th>Client Name</th>
             <th>Bill To</th>
             <th>Phone</th>
             <th>Mobile</th>
             <th>Email</th>
-            <th>Date</th>
-            <th>Due Date</th>
             <th>CompId</th>
             <th>Address</th>
             <th>Actions</th>
@@ -169,25 +134,70 @@
 
         <tbody>
           <tr *ngFor="let c of clients">
-            <td>{{c.invoiceNo}}</td>
             <td>{{c.clientName}}</td>
             <td>{{c.billTo}}</td>
             <td>{{c.phone}}</td>
             <td>{{c.mobile}}</td>
             <td>{{c.email}}</td>
-            <td>{{c.date}}</td>
-            <td>{{c.dueDate}}</td>
             <td>{{c.compId}}</td>
             <td>{{c.address}}</td>
             <td>
               <button class="btn btn-warning btn-sm me-2 my-1" (click)="updateClient(c)">✏️Edit</button>
-              <button class="btn btn-secondary btn-sm my-1 me-2 " (click)="detailClient(c.id)">📄 Details</button>
+              <button class="btn btn-secondary btn-sm my-1 me-2 " (click)="openModal(c)">📄 Details</button>
               <button class="btn btn-danger btn-sm my-1" (click)="deleteClient(c.id)">❌Delete</button>
             </td>
           </tr>
         </tbody>
 
       </table>
+    </div>
+  </div>
+
+<div class="modal fade show d-block" tabindex="-1" *ngIf="detailClient" style="background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header"
+           style="background: linear-gradient(90deg, #006d7a, #1a1a2e); color: white;">
+        <h5 class="modal-title">Client Details</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body p-3">
+        <table class="table table-borderless mb-0">
+          <tbody>
+            <tr>
+              <th>Client Name</th>
+              <td>{{ detailClient.clientName }}</td>
+            </tr>
+            <tr>
+              <th>Bill To</th>
+              <td>{{ detailClient.billTo }}</td>
+            </tr>
+            <tr>
+              <th>Phone</th>
+              <td>{{ detailClient.phone }}</td>
+            </tr>
+            <tr>
+              <th>Mobile</th>
+              <td>{{ detailClient.mobile }}</td>
+            </tr>
+            <tr>
+              <th>Email</th>
+              <td>{{ detailClient.email }}</td>
+            </tr>
+            <tr>
+              <th>CompId</th>
+              <td>{{ detailClient.compId }}</td>
+            </tr>
+            <tr>
+              <th>Address</th>
+              <td>{{ detailClient.address }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+      </div>
     </div>
   </div>
 
