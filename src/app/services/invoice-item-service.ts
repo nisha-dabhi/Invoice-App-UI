@@ -9,27 +9,30 @@ import { InvoiceItem } from '../models/invoice-item';
 export class InvoiceItemService {
 
   private apiUrl = 'https://localhost:44322/api/InvoiceItem';
-  
-    constructor(private http: HttpClient) { }
-  
-    getAllInvoiceItem(): Observable<InvoiceItem[]> {
-      return this.http.get<InvoiceItem[]>(this.apiUrl);
-    }
-  
-    addInvoiceItem(data: InvoiceItem[]) {
-      return this.http.post(this.apiUrl, data);
-    }
-  
-    updateInvoiceItem(id: number, data: InvoiceItem) {
-      return this.http.put(`${this.apiUrl}/${id}`, data);
-    }
-  
-    getInvoiceItemDetails(id: number): Observable<InvoiceItem[]> {
-        return this.http.get<InvoiceItem[]>(`${this.apiUrl}/${id}`);
-      }
-  
-    deleteInvoiceItem(id: number) {
-      return this.http.delete(`${this.apiUrl}/${id}`);
-    }
-  
+
+  constructor(private http: HttpClient) { }
+
+  getAllInvoiceItem(): Observable<InvoiceItem[]> {
+    return this.http.get<InvoiceItem[]>(this.apiUrl);
+  }
+
+  addInvoiceItems(item: InvoiceItem[]): Observable<InvoiceItem[]> {
+    return this.http.post<InvoiceItem[]>(`${this.apiUrl}`, item);
+  }
+
+  updateInvoiceItem(id: number, data: InvoiceItem) {
+    return this.http.put(`${this.apiUrl}/${id}`, data);
+  }
+
+  getInvoiceItemDetails(id: number): Observable<InvoiceItem[]> {
+    return this.http.get<InvoiceItem[]>(`${this.apiUrl}/${id}`);
+  }
+
+  deleteInvoiceItem(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+  getInvoiceById(id: number): Observable<InvoiceItem[]> {
+    return this.http.get<InvoiceItem[]>(`${this.apiUrl}/${id}`);
+  }
+
 }

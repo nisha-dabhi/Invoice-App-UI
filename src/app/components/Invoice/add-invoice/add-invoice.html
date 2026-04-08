@@ -36,7 +36,7 @@
                         <label>Company<span class="text-danger">*</span></label>
                         <select class="form-control" [(ngModel)]="invoice.compId" name="compId" required
                             #compId="ngModel">
-                            <option value="">-- Select Company --</option>
+                            <option [ngValue]="" disabled>-- Select Company --</option>
                             <option *ngFor="let c of companies" [value]="c.id">{{ c.companyName }}</option>
                         </select>
                         <div class="text-danger" *ngIf="compId.invalid && compId.touched">

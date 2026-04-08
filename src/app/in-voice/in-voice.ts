@@ -1,110 +1,93 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule, DecimalPipe, NgOptimizedImage } from '@angular/common';
-import { CompanyService } from '../services/company-service';
-import { Company } from '../models/company';
-import { Client } from '../models/client';
-import { ClientService } from '../services/client-service';
-import { Invoice } from '../models/invoice'; 
+import { ActivatedRoute } from '@angular/router';
 import { InvoiceService } from '../services/invoice-service';
+import { InvoiceItemService } from '../services/invoice-item-service';
+import { Invoice } from '../models/invoice';
+import { InvoiceItem } from '../models/invoice-item';
+import { CommonModule, DecimalPipe, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-in-voice',
   standalone: true,
-  imports: [DecimalPipe, CommonModule, NgOptimizedImage ],
+  imports: [DecimalPipe, CommonModule, NgOptimizedImage],
   templateUrl: './in-voice.html',
-  styleUrl: './in-voice.css',
+  styleUrls: ['./in-voice.css']
 })
 export class InvoiceComponent {
 
-  private _clientService = inject(ClientService);
-  private _companyService = inject(CompanyService);
+  private _route = inject(ActivatedRoute);
   private _invoiceService = inject(InvoiceService);
+  private _invoiceItemService = inject(InvoiceItemService);
 
-  companies: Company[] = [];
-  clients: Client[] = [];
-  invoices: Invoice[] = [];
+  invoiceId: number = 0;
+  invoice?: Invoice;
+  invoiceItems: InvoiceItem[] = [];
 
-  shipping: number = 100; 
+  shipping: number = 100;
 
-  // getSubtotal(): number {
-  //   return this.invoices.reduce((sum, item) => {
-  //     return sum + (item.rate * item.quantity);
-  //   }, 0);
-  // }
-
-  // getDiscount(): number {
-  //   return this.invoiceItems.reduce((sum, item) => {
-  //     const base = item.rate * item.quantity;
-  //     return sum + (base * item.discount / 100);
-  //   }, 0);
-  // } 
-
-  // getTax(): number {
-  //   return this.invoiceItems.reduce((sum, item) => {
-  //     const base = item.rate * item.quantity;
-  //     const afterDiscount = base - (base * item.discount / 100);
-  //     return sum + (afterDiscount * item.tax / 100);
-  //   }, 0);
-  // }
-
-  // getTotal(): number {
-  //   return this.getSubtotal() - this.getDiscount() + this.getTax() + this.shipping;
-  // }
-  
   subtotal = 0;
   discountVal = 0;
   taxVal = 0;
   total = 0;
 
   ngOnInit(): void {
-    this.getCompanies();
-    this.getClients();
-    this.getInvoices();
-    // this.calculateSummary();
+    const idStr = this._route.snapshot.paramMap.get('invoiceId');
+    this.invoiceId = idStr ? +idStr : 0;
+
+    if (this.invoiceId) {
+      this.loadInvoice(this.invoiceId);
+      this.loadInvoiceItems(this.invoiceId);
+    }
   }
 
-  getCompanies(): void {
-    this._companyService.getAllCompany().subscribe({
+  loadInvoice(id: number) {
+    this._invoiceService.getAllInvoice().subscribe({
       next: (data) => {
-        this.companies = data;
-        console.log('Companies loaded:', this.companies);
+        this.invoice = data.find(inv => inv.id === id);
+        if (!this.invoice) {
+          console.error('Invoice not found for id:', id);
+        } else {
+          console.log('Invoice loaded:', this.invoice);
+        }
       },
-      error: (err) => {
-        console.error('Fetch error:', err);
-      }
+      error: (err) => console.error('Error loading invoices:', err)
     });
   }
 
-  getClients(): void {
-    this._clientService.getAllClients().subscribe({
-      next: (data) => {
-        this.clients = data;
-        console.log('Clients loaded:', this.clients);
+  loadInvoiceItems(id: number) {
+    this._invoiceItemService.getInvoiceById(id).subscribe({
+      next: (data: any) => {
+        this.invoiceItems = data;
+        console.log(this.invoiceItems);
       },
-      error: (err) => {
-        console.error('Fetch error:', err);
-      }
+      error: (err) => console.error(err)
     });
   }
 
-  getInvoices(): void{
-     this._invoiceService.getAllInvoice().subscribe({
-      next: (data) => {
-        this.invoices = data;
-        console.log('Items loaded:', this.invoices);
-      },
-      error: (err) => {
-        console.error('Fetch error:', err);
-      }
-    });
+  getSubtotal(): number {
+    return this.invoiceItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   }
 
+  getDiscount(): number {
+    return this.invoiceItems.reduce((sum, item) => sum + ((item.price * item.quantity) * item.disc / 100), 0);
+  }
 
-  // calculateSummary() {
-  //   this.subtotal = this.getSubtotal();
-  //   this.discountVal = this.getDiscount();
-  //   this.taxVal = this.getTax();
-  //   this.total = this.getTotal();
-  // }
+  getTax(): number {
+    return this.invoiceItems.reduce((sum, item) => {
+      const base = item.price * item.quantity;
+      return sum + ((base - (base * item.disc / 100)) * item.tax / 100);
+    }, 0);
+  }
 
+  getTotal(): number {
+    const shipping = 100;
+    return this.getSubtotal() - this.getDiscount() + this.getTax() + shipping;
+  }
+
+  calculateSummary() {
+    this.subtotal = this.getSubtotal();
+    this.discountVal = this.getDiscount();
+    this.taxVal = this.getTax();
+    this.total = this.getTotal();
+  }
 }

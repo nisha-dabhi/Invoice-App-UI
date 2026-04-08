@@ -1,164 +1,149 @@
-<form #invoiceForm="ngForm" class="container mt-4">
+<div class="container mt-4">
 
-  <div class="card mb-3 shadow">
-    <div class="card-header bg-primary text-white">
-      Invoice Details
+  <div class="card shadow mb-4" *ngIf="showForm">
+    <div class="card-header text-white d-flex justify-content-between align-items-center"
+      style="background: linear-gradient(90deg, #1a1a2e, #006d7a);">
+      <strong>Invoice Detail</strong>
+      <button class="btn btn-light btn-sm" (click)="closeCard()">✖</button>
     </div>
 
     <div class="card-body">
-      <div class="row">
+      <form #invoiceItemForm="ngForm">
 
-        <div class="col-md-3 mb-3">
-          <label>Invoice No<span class="text-danger">*</span></label>
-          <select class="form-control" [(ngModel)]="invoiceId" name="invoiceId" required #invoiceId="ngModel"
-            [class.is-invalid]="invoiceId.invalid && (invoiceId.touched || invoiceForm.submitted)">
-            <option value="">-- Select Invoice No --</option>
-            <option *ngFor="let i of invoices" [value]="i.invoiceId">
-              {{i.invoiceNo}}
-            </option>
-          </select>
-          <div class="invalid-feedback" *ngIf="invoiceId.invalid && (invoiceId.touched || invoiceForm.submitted)">
-            Invoice No is required
+        <div class="row">
+          <div class="col-md-3 mb-3"> <label>Invoice No<span class="text-danger">*</span></label> <select
+              class="form-control" [(ngModel)]="invoiceItem.invoiceId" name="invoiceId" required #invoiceIdRef="ngModel"
+              (change)="onInvoiceNoChange()"
+              [class.is-invalid]="invoiceIdRef.invalid && (invoiceIdRef.touched || invoiceItemForm.submitted)">
+              <option value="">-- Select Invoice No --</option>
+              <option *ngFor="let i of invoices" [ngValue]="i.id">{{i.invoiceNo}}</option>
+            </select>
+            <div class="text-danger"
+              *ngIf="invoiceIdRef.invalid && (invoiceIdRef.touched || invoiceItemForm.submitted)"> <small
+                *ngIf="invoiceIdRef.errors?.['required']">Invoice No is required</small> </div>
+          </div>
+          <div class="col-md-3 mb-3"> <label>Company</label>
+            <input class="form-control" [value]="selectedCompanyName" readonly>
+          </div>
+          <div class="col-md-3 mb-3"> <label>Client</label>
+            <input class="form-control" [value]="selectedClientName" readonly>
+          </div>
+
+          <div class="col-md-3 mb-3"> <label for="selectedProdId">Product<span class="text-danger">*</span></label>
+            <select id="selectedProdId" class="form-control" name="selectedProdId" [(ngModel)]="invoiceItem.prodId"
+              required #prod="ngModel" (change)="onProductChange()"
+              [class.is-invalid]="prod.invalid && (prod.touched || invoiceItemForm.submitted)">
+              <option [ngValue]="null" disabled>-- Select Product --</option>
+              <option *ngFor="let p of products" [ngValue]="p.id">{{ p.productName }}</option>
+            </select>
+            <div class="text-danger" *ngIf="prod.invalid && (prod.touched || invoiceItemForm.submitted)"> <small
+                *ngIf="prod.errors?.['required']">Select product</small> </div>
+          </div>
+
+          <div class="col-md-2 mb-3"> <label>Price</label>
+            <input class="form-control" [(ngModel)]="invoiceItem.price" name="price" readonly>
+          </div>
+
+          <div class="col-md-2 mb-3">
+            <label>Quantity<span class="text-danger">*</span></label>
+            <input type="number" class="form-control" [(ngModel)]="invoiceItem.quantity" name="quantity"
+              (input)="calculateAmount()" required min="1" #qty="ngModel"
+              [class.is-invalid]="qty.invalid && (qty.touched || invoiceItemForm.submitted)">
+            <div class="text-danger" *ngIf="qty.invalid && (qty.touched || invoiceItemForm.submitted)">
+              <small *ngIf="qty.errors?.['required']">Quantity is required</small>
+              <small *ngIf="qty.errors?.['min']">Quantity must be greater than 0</small>
+            </div>
+          </div>
+
+          <div class="col-md-2 mb-3">
+            <label>Discount (%)</label>
+            <input type="number" class="form-control" [(ngModel)]="invoiceItem.disc" name="disc" min="0" max="100"
+              #discCtrl="ngModel" (input)="calculateAmount()"
+              [class.is-invalid]="discCtrl.invalid && (discCtrl.touched || invoiceItemForm.submitted)">
+            <div class="text-danger" *ngIf="discCtrl.invalid && (discCtrl.touched || invoiceItemForm.submitted)">
+              <small *ngIf="discCtrl.errors?.['min']">Discount cannot be negative</small>
+              <small *ngIf="discCtrl.errors?.['max']">Discount cannot exceed 100%</small>
+            </div>
+          </div>
+
+          <div class="col-md-2 mb-3">
+            <label>Tax (%)</label>
+            <input type="number" class="form-control" [(ngModel)]="invoiceItem.tax" name="tax" min="0" max="100"
+              #taxCtrl="ngModel" (input)="calculateAmount()"
+              [class.is-invalid]="taxCtrl.invalid && (taxCtrl.touched || invoiceItemForm.submitted)">
+            <div class="text-danger" *ngIf="taxCtrl.invalid && (taxCtrl.touched || invoiceItemForm.submitted)">
+              <small *ngIf="taxCtrl.errors?.['min']">Tax cannot be negative</small>
+              <small *ngIf="taxCtrl.errors?.['max']">Tax cannot exceed 100%</small>
+            </div>
+          </div>
+
+          <div class="col-md-2 mb-3">
+            <label>Amount<span class="text-danger">*</span></label>
+            <input type="number" class="form-control" [(ngModel)]="invoiceItem.amount" name="amount" readonly required
+              #amt="ngModel" [class.is-invalid]="amt.invalid && (amt.touched || invoiceItemForm.submitted)">
+            <div class="text-danger" *ngIf="amt.invalid && (amt.touched || invoiceItemForm.submitted)">
+              <small>Amount is required</small>
+            </div>
           </div>
         </div>
 
-        <div class="col-md-3 mb-3">
-          <label>Company<span class="text-danger">*</span></label>
-          <select class="form-control" [(ngModel)]="compId" name="compId" required #compId="ngModel"
-            [class.is-invalid]="compId.invalid && (compId.touched || invoiceForm.submitted)">
-            <option value="">-- Select Company --</option>
-            <option *ngFor="let c of companies" [value]="c.compId">
-              {{c.companyName}}
-            </option>
-          </select>
-          <div class="invalid-feedback" *ngIf="compId.invalid && (compId.touched || invoiceForm.submitted)">
-            Company is required
-          </div>
-        </div>
-
-        <div class="col-md-3 mb-3">
-          <label>Client<span class="text-danger">*</span></label>
-          <select class="form-control" [(ngModel)]="clientId" name="clientId" required #clientId="ngModel"
-            [class.is-invalid]="clientId.invalid && (clientId.touched || invoiceForm.submitted)">
-            <option value="">-- Select Client --</option>
-            <option *ngFor="let c of clients" [value]="c.clientId">
-              {{c.clientName}}
-            </option>
-          </select>
-          <div class="invalid-feedback" *ngIf="clientId.invalid && (clientId.touched || invoiceForm.submitted)">
-            Client is required
-          </div>
-        </div>
-
-
-
-
-        <div class="card-body">
-          <div class="row">
-
-            <div class="col-md-3 mb-3">
-              <label>Product<span class="text-danger">*</span></label>
-              <select class="form-control" [(ngModel)]="selectedProdId" name="selectedProdId" required #prod="ngModel"
-                (change)="onProductChange()"
-                [class.is-invalid]="prod.invalid && (prod.touched || invoiceForm.submitted)">
-                <option value="">-- Select Product --</option>
-                <option *ngFor="let p of products" [value]="p.id">
-                  {{p.productName}}
-                </option>
-              </select>
-              <div class="invalid-feedback" *ngIf="prod.invalid && (prod.touched || invoiceForm.submitted)">
-                Product is required
-              </div>
-            </div>
-
-            <div class="col-md-2 mb-3">
-              <label>Price</label>
-              <input class="form-control" [(ngModel)]="price" name="price" readonly>
-            </div>
-
-            <div class="col-md-2 mb-3">
-              <label>Quantity<span class="text-danger">*</span></label>
-              <input type="number" class="form-control" [(ngModel)]="quantity" name="quantity" required min="1"
-                #qtyRef="ngModel" [class.is-invalid]="qtyRef.invalid && (qtyRef.touched || invoiceForm.submitted)">
-              <div class="invalid-feedback" *ngIf="qtyRef.invalid && (qtyRef.touched || invoiceForm.submitted)">
-                Quantity must be greater than 0
-              </div>
-            </div>
-
-            <div class="col-md-2 mb-3">
-              <label>Discount (%)</label>
-              <input type="number" class="form-control" [(ngModel)]="disc" name="disc" min="0" max="100">
-            </div>
-
-            <div class="col-md-2 mb-3">
-              <label>Tax (%)</label>
-              <input type="number" class="form-control" [(ngModel)]="tax" name="tax" min="0" max="100">
-            </div>
-
-            <div class="col-md-1 d-flex align-items-end mb-3">
-              <button type="button" class="btn btn-success w-100" (click)="getInvoices()"
-                [disabled]="prod.invalid || qtyRef.invalid">
-                Add
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <div class="card shadow">
-        <div class="card-header bg-secondary text-white">
-          Invoice Items
-        </div>
-
-        <div class="card-body table-responsive">
-
-          <table class="table table-bordered text-center">
-
-            <thead class="table-light">
-              <tr>
-                <th rowspan="2">InvoiceId</th>
-                <th rowspan="2">CompId</th>
-                <th rowspan="3">ClientId</th>
-                <th>Product</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Disc</th>
-                <th>Tax</th>
-                <th>Amount</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr *ngFor="let item of invoiceItems; let i = index">
-                <td>{{item.productName}}</td>
-                <td>{{item.quantity}}</td>
-                <td>{{item.price}}</td>
-                <td>{{item.disc}}</td>
-                <td>{{item.tax}}</td>
-                <td>{{item.amount | number:'1.2-2'}}</td>
-                <td>
-                  <button type="button" class="btn btn-danger btn-sm" (click)="removeItem(i)">
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-
-          </table>
-
-        </div>
-
-        <div class="card-footer text-end">
-          <button type="button" class="btn btn-primary" (click)="addInvoiceItem()"
-            [disabled]="invoiceItems.length === 0 || invoiceForm.invalid">
-            Save Invoice
-          </button>
-        </div>
-
-      </div>
+        <button type="button" class="btn btn-success me-2" (click)="addInvoiceItems()">
+          {{ isEdit ? 'Update' : 'Save' }}
+        </button>
+        <button type="button" class="btn btn-secondary me-2" (click)="resetForm()">Reset</button>
+        <button type="button" class="btn btn-danger" (click)="closeCard()">Close</button>
+      </form>
     </div>
   </div>
 
-</form>
+  <div class="card shadow">
+    <div class="card-header d-flex justify-content-between align-items-center"
+      style="background: linear-gradient(90deg, #3a5080, #3b3b6b); color:white;">
+      <strong>InvoiceItem List</strong>
+      <button class="btn btn-light btn-sm fw-semibold shadow-sm" style="color:#3a5080;" (click)="openForm()">+ Add
+        InvoiceItem</button>
+    </div>
+
+    <div class="card-body table-responsive">
+      <table class="table table-bordered text-center">
+        <thead class="table-light">
+          <tr>
+            <th>Invoice No</th>
+            <th>Company</th>
+            <th>Client</th>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Disc</th>
+            <th>Tax</th>
+            <th>Amount</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let group of groupedItems">
+            <tr *ngFor="let it of group.items; let i = index">
+              <ng-container *ngIf="i === 0">
+                <td [attr.rowspan]="group.items.length" class="align-middle text-center">{{ it.invoiceNo }}</td>
+                <td [attr.rowspan]="group.items.length" class="align-middle text-center">{{ it.compId }}</td>
+                <td [attr.rowspan]="group.items.length" class="align-middle text-center">{{ it.clientId }}</td>
+              </ng-container>
+              <td>{{ it.productName }}</td>
+              <td>{{ it.quantity }}</td>
+              <td>{{ it.price }}</td>
+              <td>{{ it.disc }}</td>
+              <td>{{ it.tax }}</td>
+              <td>{{ it.amount | number:'1.2-2' }}</td>
+              <td>
+                <button type="button" class="btn btn-warning btn-sm me-1" (click)="editItem(it)">Edit</button>
+                <button type="button" class="btn btn-danger btn-sm me-1" (click)="removeItem(it)">Delete</button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="goToInvoice(it.invoiceId)">Invoice</button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

@@ -31,4 +31,5 @@ export class InvoiceService {
   deleteInvoice(id: number) {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+  
 }
