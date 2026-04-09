@@ -83,14 +83,14 @@ export class AddInvoiceItem {
     });
   }
 
-    onProductChange() {
-      const p = this.products.find(x => x.id === this.invoiceItem.prodId);
-      if (p) {
-        this.invoiceItem.productName = p.productName;
-        this.invoiceItem.price = p.price;
-        this.calculateAmount();
-      }
+  onProductChange() {
+    const p = this.products.find(x => x.id === this.invoiceItem.prodId);
+    if (p) {
+      this.invoiceItem.productName = p.productName;
+      this.invoiceItem.price = p.price;
+      this.calculateAmount();
     }
+  }
 
   onInvoiceNoChange() {
     const inv = this.invoices.find(x => x.id === this.invoiceItem.invoiceId);
@@ -120,6 +120,7 @@ export class AddInvoiceItem {
     if (this.isEdit) {
       this.invoiceItemService.updateInvoiceItem(this.invoiceItem.id, this.invoiceItem)
         .subscribe(() => {
+          alert('Updated Successfully');
           this.toastr.success('Updated successfully!', 'Updated');
           this.loadInvoiceItems();
           this.resetForm();
@@ -128,6 +129,7 @@ export class AddInvoiceItem {
       this.invoiceItemService.addInvoiceItems([this.invoiceItem])
         .subscribe({
           next: () => {
+            alert('Data Saved Successfully');
             this.toastr.success('Saved successfully!', 'Success');
             this.loadInvoiceItems();
             this.resetForm();

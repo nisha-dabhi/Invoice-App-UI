@@ -1,0 +1,39 @@
+<div class="content-container">
+  <nav class="navbar navbar-expand-lg sticky-top "
+     style="background: linear-gradient(90deg, #141e30, #243b55);">
+    <div class="container-fluid">
+      <a routerLink="/product" class="navbar-brand text-white">Invoice Page</a>
+      <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+            <a class="nav-link text-white" routerLinkActive="active" routerLink="/product">Product</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLinkActive="active" routerLink="/addItem">Invoice Items</a>
+          </li>          
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLinkActive="active" routerLink="/addInvoice">Invoice</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLinkActive="active" routerLink="/client">Client</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLinkActive="active" routerLink="/user">User</a>
+          </li>
+        </ul>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search">
+          <button class="btn btn-outline-success me-2" type="submit">Search</button>
+          <span class="text-white me-3 mt-2">{{ user?.firstName }}</span>
+          <button class="btn btn-danger btn-sm ms-auto" (click)="logout()">Logout</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <router-outlet></router-outlet>
+</div>

@@ -1,19 +1,22 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { InvoiceService } from '../services/invoice-service';
-import { InvoiceItemService } from '../services/invoice-item-service';
-import { Invoice } from '../models/invoice';
-import { InvoiceItem } from '../models/invoice-item';
+import { ActivatedRoute, Router} from '@angular/router';
+
 import { CommonModule, DecimalPipe, NgOptimizedImage } from '@angular/common';
+import { InvoiceService } from '../../services/invoice-service';
+import { InvoiceItemService } from '../../services/invoice-item-service';
+import { Invoice } from '../../models/invoice';
+import { InvoiceItem } from '../../models/invoice-item';
 
 @Component({
   selector: 'app-in-voice',
   standalone: true,
-  imports: [DecimalPipe, CommonModule, NgOptimizedImage],
+  imports: [DecimalPipe, CommonModule, NgOptimizedImage ],
   templateUrl: './in-voice.html',
   styleUrls: ['./in-voice.css']
 })
 export class InvoiceComponent {
+ 
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   private _route = inject(ActivatedRoute);
   private _invoiceService = inject(InvoiceService);
@@ -89,5 +92,13 @@ export class InvoiceComponent {
     this.discountVal = this.getDiscount();
     this.taxVal = this.getTax();
     this.total = this.getTotal();
+  }
+   
+  //  goToAddItem() {
+  //   this.router.navigate(['/addItem'], { relativeTo: this.route });
+  // }
+
+   backToList() {
+    this.router.navigate(['/addItem'], { relativeTo: this.route });
   }
 }

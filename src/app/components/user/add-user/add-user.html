@@ -1,4 +1,4 @@
-<div class="container mt-4" style="max-width: 1600px;">
+<div class="container mt-5" style="max-width: 1600px;">
 
   <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
@@ -15,7 +15,8 @@
           <div class="col-md-6 mb-3">
             <label>First Name<span class="text-danger">*</span></label>
             <input type="text" class="form-control" [(ngModel)]="user.firstName" placeholder="Enter firstName"
-              name="firstName" required minlength="2" #firstName="ngModel">
+              name="firstName" required minlength="2" #firstName="ngModel"
+              [class.is-invalid]="firstName.invalid && firstName.touched">
             <div class="text-danger" *ngIf="firstName.invalid && firstName.touched">
               <small *ngIf="firstName.errors?.['required']">First Name is required</small>
               <small *ngIf="firstName.errors?.['minlength']">Minimum 2 characters</small>
@@ -25,7 +26,8 @@
           <div class="col-md-6 mb-3">
             <label>Last Name<span class="text-danger">*</span></label>
             <input type="text" class="form-control" [(ngModel)]="user.lastName" placeholder="Enter lastName"
-              name="lastName" required minlength="2" #lastName="ngModel">
+              name="lastName" required minlength="2" #lastName="ngModel"
+              [class.is-invalid]="lastName.invalid && lastName.touched">
             <div class="text-danger" *ngIf="lastName.invalid && lastName.touched">
               <small *ngIf="lastName.errors?.['required']">Last Name is required</small>
               <small *ngIf="lastName.errors?.['minlength']">Minimum 2 characters</small>
@@ -36,7 +38,7 @@
             <label>Phone<span class="text-danger">*</span></label>
             <input type="text" class="form-control" [(ngModel)]="user.phone" placeholder="Enter Phone No" name="phone"
               #phone="ngModel" required pattern="^[0-9]{10}$" minlength="10" maxlength="10"
-              (keypress)="onlyNumbers($event)">
+              (keypress)="onlyNumbers($event)" [class.is-invalid]="phone.invalid && phone.touched">
 
             <div class="text-danger" *ngIf="phone.invalid && phone.touched">
               <small *ngIf="phone.errors?.['required']">phone is required</small>
@@ -47,7 +49,8 @@
           <div class="col-md-6 mb-3">
             <label>Email<span class="text-danger">*</span></label>
             <input type="email" class="form-control" [(ngModel)]="user.email" placeholder="Enter your email"
-              name="email" [readonly]="isEdit" required email #email="ngModel">
+              name="email" [readonly]="isEdit" required email #email="ngModel"
+              [class.is-invalid]="email.invalid && email.touched">
             <div class="text-danger" *ngIf="email.invalid && email.touched">
               <small *ngIf="email.errors?.['required']">Email is required</small>
               <small *ngIf="email.errors?.['email']">Invalid email format</small>
@@ -75,7 +78,7 @@
             <select class="form-control" [(ngModel)]="user.compId" title="select company" name="compId" required
               #compId="ngModel" [class.is-invalid]="compId.invalid && compId.touched">
 
-              <option value="">-- Select Company --</option>
+              <option value="" disabled>-- Select Company --</option>
               <option *ngFor="let c of companies" [value]="c.id">
                 {{ c.companyName }}
               </option>
@@ -144,44 +147,43 @@
   </div>
 
   <div class="modal fade show d-block" tabindex="-1" *ngIf="detailUser" style="background: rgba(0,0,0,0.5);">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content shadow">
-      <div class="modal-header"
-           style="background: linear-gradient(90deg, #3b3b6b, #3a5080); color: white;">
-        <h5 class="modal-title">User Details</h5>
-        <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
-      </div>
-      <div class="modal-body p-3">
-        <table class="table table-borderless mb-0">
-          <tbody>
-            <tr>
-              <th style="width: 40%;">First Name</th>
-              <td>{{ detailUser.firstName }}</td>
-            </tr>
-            <tr>
-              <th>Last Name</th>
-              <td>{{ detailUser.lastName }}</td>
-            </tr>
-            <tr>
-              <th>Phone</th>
-              <td>{{ detailUser.phone }}</td>
-            </tr>
-            <tr>
-              <th>Email</th>
-              <td>{{ detailUser.email }}</td>
-            </tr>
-            <tr>
-              <th>Company</th>
-              <td>{{ detailUser.compId }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow">
+        <div class="modal-header" style="background: linear-gradient(90deg, #3b3b6b, #3a5080); color: white;">
+          <h5 class="modal-title">User Details</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body p-3">
+          <table class="table table-borderless mb-0">
+            <tbody>
+              <tr>
+                <th style="width: 40%;">First Name</th>
+                <td>{{ detailUser.firstName }}</td>
+              </tr>
+              <tr>
+                <th>Last Name</th>
+                <td>{{ detailUser.lastName }}</td>
+              </tr>
+              <tr>
+                <th>Phone</th>
+                <td>{{ detailUser.phone }}</td>
+              </tr>
+              <tr>
+                <th>Email</th>
+                <td>{{ detailUser.email }}</td>
+              </tr>
+              <tr>
+                <th>Company</th>
+                <td>{{ detailUser.compId }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 </div>

@@ -25,7 +25,7 @@
               },
               {
                 "glob": "**/*",
-                "input": "src/app/in-voice/assets/Images",
+                "input": "src/assets/Images",
                 "output": "assets/Images"
               }
             ],

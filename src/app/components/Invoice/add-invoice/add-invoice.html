@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class="container mt-5">
     <div class="card shadow mb-4" *ngIf="showForm">
         <div class="card-header d-flex justify-content-between align-items-center"
             style="background: linear-gradient(90deg, #3b3b6b, #3a5080); color:white;">
@@ -11,7 +11,8 @@
                     <div class="col-md-6 mb-3">
                         <label>Invoice No<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" [(ngModel)]="invoice.invoiceNo" name="invoiceNo"
-                            required #invoiceNo="ngModel">
+                            placeholder="Enter InvoiceNo" required #invoiceNo="ngModel"
+                            [class.is-invalid]="invoiceNo.invalid && invoiceNo.touched">
                         <div class="text-danger" *ngIf="invoiceNo.invalid && invoiceNo.touched">
                             <small>Invoice No is required</small>
                         </div>
@@ -19,7 +20,7 @@
                     <div class="col-md-6 mb-3">
                         <label>Date<span class="text-danger">*</span></label>
                         <input type="date" class="form-control" [(ngModel)]="invoice.date" name="date" required
-                            #date="ngModel">
+                            #date="ngModel" [class.is-invalid]="date.invalid && date.touched">
                         <div class="text-danger" *ngIf="date.invalid && date.touched">
                             <small>Date is required</small>
                         </div>
@@ -27,15 +28,15 @@
                     <div class="col-md-6 mb-3">
                         <label>Due Date<span class="text-danger">*</span></label>
                         <input type="date" class="form-control" [(ngModel)]="invoice.dueDate" name="dueDate" required
-                            #dueDate="ngModel">
-                        <div class="text-danger" *ngIf="dueDate.invalid && dueDate.touched">
+                            #dD="ngModel" [class.is-invalid]="dD.invalid && dD.touched">
+                        <div class="text-danger" *ngIf="dD.invalid && dD.touched">
                             <small>Due Date is required</small>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Company<span class="text-danger">*</span></label>
                         <select class="form-control" [(ngModel)]="invoice.compId" name="compId" required
-                            #compId="ngModel">
+                            #compId="ngModel" [class.is-invalid]="compId.invalid && compId.touched">
                             <option [ngValue]="" disabled>-- Select Company --</option>
                             <option *ngFor="let c of companies" [value]="c.id">{{ c.companyName }}</option>
                         </select>
@@ -46,28 +47,29 @@
                     <div class="col-md-6 mb-3">
                         <label>Client<span class="text-danger">*</span></label>
                         <select class="form-control" [(ngModel)]="invoice.clientId" name="clientId" required
-                            #clientId="ngModel">
+                            #cId="ngModel" [class.is-invalid]="cId.invalid && cId.touched">
                             <option value="">-- Select Client --</option>
                             <option *ngFor="let c of clients" [value]="c.id">{{ c.clientName }}</option>
                         </select>
-                        <div class="text-danger" *ngIf="clientId.invalid && clientId.touched">
+                        <div class="text-danger" *ngIf="cId.invalid && cId.touched">
                             <small>Select client</small>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Total Amount<span class="text-danger">*</span></label>
                         <input type="number" class="form-control" [(ngModel)]="invoice.totalAmount" name="totalAmount"
-                            required #totalAmount="ngModel">
-                        <div class="text-danger" *ngIf="totalAmount.invalid && totalAmount.touched">
+                            placeholder="Enter Amount"
+                            required #tA="ngModel" [class.is-invalid]="tA.invalid && tA.touched">
+                        <div class="text-danger" *ngIf="tA.invalid && tA.touched">
                             <small>Amount required</small>
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary me-2" (click)="addInvoice()" [disabled]="invoiceForm.invalid">
+                <button class="btn btn-primary me-2 my-1" (click)="addInvoice()" [disabled]="invoiceForm.invalid">
                     {{ isEdit ? 'Update' : 'Save' }}
                 </button>
-                <button type="button" class="btn btn-secondary me-2" (click)="resetForm()">Reset</button>
-                <button type="button" class="btn btn-danger" (click)="closeCard()">Close</button>
+                <button type="button" class="btn btn-secondary me-2 my-1" (click)="resetForm()">Reset</button>
+                <button type="button" class="btn btn-danger my-1" (click)="closeCard()">Close</button>
             </form>
         </div>
     </div>
@@ -76,8 +78,9 @@
         <div class="card-header d-flex justify-content-between align-items-center"
             style="background: linear-gradient(90deg, #3a5080, #3b3b6b); color:white;">
             <strong>Invoice List</strong>
-            <button class="btn btn-light btn-sm fw-semibold shadow-sm" style="color:#3a5080;" (click)="openForm()">+ Add
-                Invoice</button>
+            <button class="btn btn-light btn-sm fw-semibold shadow-sm" style="color:#3a5080;" 
+                    (click)="openForm()">+ Add Invoice
+            </button>
         </div>
         <div class="card-body table-responsive">
             <table class="table table-bordered table-hover text-center">
