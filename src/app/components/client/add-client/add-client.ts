@@ -22,6 +22,7 @@ export class AddClient {
   companyName: string = '';
   detailClient: Client | null = null;
   showDetail = false;
+  showForm = true;
 
   constructor(private companyService: CompanyService, private service: ClientService, private router: Router, private toastr: ToastrService) { }
 
@@ -78,6 +79,7 @@ export class AddClient {
     this.isEdit = true;
   }
   openForm() {
+    this.showForm = true;
     this.client = {} as Client;
     this.isEdit = false;
   }
@@ -113,6 +115,7 @@ export class AddClient {
   }
 
   closeCard() {
+    this.showForm = false;
     this.resetForm();
   }
 

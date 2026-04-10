@@ -93,10 +93,7 @@ export class InvoiceComponent {
     this.taxVal = this.getTax();
     this.total = this.getTotal();
   }
-   
-  //  goToAddItem() {
-  //   this.router.navigate(['/addItem'], { relativeTo: this.route });
-  // }
+ 
 
    backToList() {
     this.router.navigate(['/addItem'], { relativeTo: this.route });

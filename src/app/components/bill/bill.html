@@ -1,0 +1,259 @@
+<div class="container mt-5">
+
+    <div class="card shadow mb-4" *ngIf="showForm">
+        <div class="card-header text-white d-flex justify-content-between align-items-center"
+            style="background: linear-gradient(135deg, #0a192f, #0d3b6e, #1a6b9a);">
+            <strong>{{ isEdit ? 'Edit Bill' : 'Add Bill' }}</strong>
+            <button class="btn btn-light btn-sm" (click)="closeCard()">✖</button>
+        </div>
+
+        <div class="card-body">
+            <form [formGroup]="billForm">
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                        <label>Customer Name<span class="text-danger">*</span></label>
+                        <select class="form-control" formControlName="custoId" (change)="onCustomerChange()"
+                            [class.is-invalid]="f['custoId'].invalid && f['custoId'].touched">
+                            <option value="">-- Select Customer --</option>
+                            <option *ngFor="let c of customers" [value]="c.id">{{ c.customerName }}</option>
+                        </select>
+                        <div class="text-danger" *ngIf="f['custoId'].invalid && f['custoId'].touched">
+                            <small>Customer is required</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Company Name</label>
+                        <input class="form-control" [value]="selectedCompanyName" placeholder="Auto-filled" readonly>
+                    </div>
+
+                    <!-- <div class="col-md-4 mb-3">
+                        <label>Invoice No<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="invoiceNo"
+                            placeholder="Enter Invoice No"
+                            [class.is-invalid]="f['invoiceNo'].invalid && f['invoiceNo'].touched">
+                        <div class="text-danger" *ngIf="f['invoiceNo'].invalid && f['invoiceNo'].touched">
+                            <small>Invoice No is required</small>
+                        </div>
+                    </div> -->
+
+                    <div class="col-md-4 mb-3">
+                        <label>Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" formControlName="date" [max]="today"
+                            [class.is-invalid]="f['date'].invalid && f['date'].touched">
+                        <div class="text-danger" *ngIf="f['date'].invalid && f['date'].touched">
+                            <small>Date is required</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-5">
+                        <label>Due Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" formControlName="dueDate"
+                            [class.is-invalid]="f['dueDate'].invalid && f['dueDate'].touched">
+                        <div class="text-danger" *ngIf="f['dueDate'].invalid && f['dueDate'].touched">
+                            <small>Due Date is required</small>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="col-md-4 mt-3 mb-3">
+                        <label>Product Name<span class="text-danger">*</span></label>
+                        <select class="form-control" formControlName="prodId" (change)="onProductChange()"
+                            [class.is-invalid]="f['prodId'].invalid && f['prodId'].touched">
+                            <option value="">-- Select Product --</option>
+                            <option *ngFor="let p of products" [value]="p.id">{{ p.productName }}</option>
+                        </select>
+                        <div class="text-danger" *ngIf="f['prodId'].invalid && f['prodId'].touched">
+                            <small>Product is required</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mt-3 mb-3">
+                        <label>Price</label>
+                        <input class="form-control" formControlName="price" placeholder="Auto-filled" readonly>
+                    </div>
+
+                    <div class="col-md-4 mt-3  mb-3">
+                        <label>Quantity<span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" formControlName="quantity" placeholder="0" min="1"
+                            (input)="calculateAmount()"
+                            [class.is-invalid]="f['quantity'].invalid && f['quantity'].touched">
+                        <div class="text-danger" *ngIf="f['quantity'].invalid && f['quantity'].touched">
+                            <small *ngIf="f['quantity'].errors?.['required']">Quantity is required</small>
+                            <small *ngIf="f['quantity'].errors?.['min']">Minimum 1</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Discount (%)</label>
+                        <input type="number" class="form-control" formControlName="disc" placeholder="0" min="0"
+                            max="100" (input)="calculateAmount()"
+                            [class.is-invalid]="f['disc'].invalid && f['disc'].touched">
+                        <div class="text-danger" *ngIf="f['disc'].invalid && f['disc'].touched">
+                            <small *ngIf="f['disc'].errors?.['min']">Cannot be negative</small>
+                            <small *ngIf="f['disc'].errors?.['max']">Cannot exceed 100%</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Tax (%)</label>
+                        <input type="number" class="form-control" formControlName="tax" placeholder="0" min="0"
+                            max="100" (input)="calculateAmount()"
+                            [class.is-invalid]="f['tax'].invalid && f['tax'].touched">
+                        <div class="text-danger" *ngIf="f['tax'].invalid && f['tax'].touched">
+                            <small *ngIf="f['tax'].errors?.['min']">Cannot be negative</small>
+                            <small *ngIf="f['tax'].errors?.['max']">Cannot exceed 100%</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Amount</label>
+                        <input type="number" class="form-control" formControlName="amount" placeholder="Auto-calculated"
+                            readonly>
+                    </div>
+
+                </div>
+
+                <button type="button" class="btn btn-primary me-2 my-1" (click)="addToTemp()"
+                    [disabled]="billForm.invalid">
+                    {{ isEdit ? 'Update Row' : '+ Add' }}
+                </button>
+                <button type="button" class="btn btn-secondary me-2 my-1" (click)="resetForm()">Reset</button>
+                <button type="button" class="btn btn-danger my-1" (click)="closeCard()">Close</button>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4" *ngIf="tempBills.length > 0">
+        <div class="card-header text-white" style="background: linear-gradient(135deg, #1a6b9a, #0d3b6e);">
+            <strong>📋 Pending Bills — Click Save to store in DB</strong>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-bordered text-center">
+                <thead class="table-warning">
+                    <tr>
+                        <th>Invoice No</th>
+                        <th>Date</th>
+                        <th>Due Date</th>
+                        <th>Customer</th>
+                        <th>Company</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Disc%</th>
+                        <th>Tax%</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let b of tempBills; let i = index">
+                        <td>{{ b.invoiceNo }}</td>
+                        <td>{{ b.date | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ b.dueDate | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ b.customerName }}</td>
+                        <td>{{ b.companyName }}</td>
+                        <td>{{ b.productName }}</td>
+                        <td>{{ b.price | number:'1.2-2' }}</td>
+                        <td>{{ b.quantity }}</td>
+                        <td>{{ b.disc ?? 0 }}</td>
+                        <td>{{ b.tax ?? 0 }}</td>
+                        <td>{{ b.amount | number:'1.2-2' }}</td>
+                        <td>
+                            <button class="btn btn-success btn-sm me-1" (click)="saveToDB(i)">💾 Save</button>
+                            <button class="btn btn-warning btn-sm me-1" (click)="editTempRow(i)">✏️ Edit</button>
+                            <button class="btn btn-danger btn-sm" (click)="removeTempRow(i)">❌ Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- <div class="card shadow mt-2">
+        <div class="card-header d-flex justify-content-between align-items-center"
+            style="background: linear-gradient(135deg, #1a6b9a, #0d3b6e, #0a192f); color: white;">
+            <strong>Bill List</strong>
+            <button class="btn btn-light btn-sm fw-semibold shadow-sm" style="color: #0d3b6e;" (click)="openForm()">+
+                Add Bill</button>
+        </div>
+
+        <div class="card-body table-responsive">
+            <table class="table table-bordered text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>Invoice No</th>
+                        <th>Date</th>
+                        <th>Due Date</th>
+                        <th>Customer</th>
+                        <th>Company</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Disc%</th>
+                        <th>Tax%</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let group of groupedBills">
+                        <tr *ngFor="let b of group.items; let i = index">
+
+                            <ng-container *ngIf="i === 0">
+                                <td [attr.rowspan]="group.items.length" class="align-middle fw-semibold">
+                                    {{ group.invoiceNo }}
+                                </td>
+                                <td [attr.rowspan]="group.items.length" class="align-middle">
+                                    {{ group.date | date:'dd/MM/yyyy' }}
+                                </td>
+                                <td [attr.rowspan]="group.items.length" class="align-middle">
+                                    {{ group.dueDate | date:'dd/MM/yyyy' }}
+                                </td>
+                                <td [attr.rowspan]="group.items.length" class="align-middle">
+                                    {{ group.customerName }}
+                                </td>
+                                <td [attr.rowspan]="group.items.length" class="align-middle">
+                                    {{ group.companyName }}
+                                </td>
+                            </ng-container>
+
+                            <td>{{ b.productName }}</td>
+                            <td>{{ b.price | number:'1.2-2' }}</td>
+                            <td>{{ b.quantity }}</td>
+                            <td>{{ b.disc ?? 0 }}</td>
+                            <td>{{ b.tax ?? 0 }}</td>
+                            <td>{{ b.amount | number:'1.2-2' }}</td>
+                            <td class="align-middle">
+                                <div class="d-grid gap-1" style="grid-template-columns: 1fr 1fr;">
+                                    <button class="btn btn-warning btn-sm" (click)="editBill(b)">✏️ Edit</button>
+
+                                    <button class="btn btn-secondary btn-sm" (click)="openDetailModal(group)">
+                                        📄 Detail</button>
+                                    <button class="btn btn-danger btn-sm" (click)="deleteBill(b.id)">
+                                        ❌ Delete</button>
+
+                                    <ng-container *ngIf="i === 0; else emptyCell">
+                                        <button class="btn btn-success btn-sm" (click)="saveInvoiceToBillInfo(group)">💾
+                                            Save</button>
+                                    </ng-container>
+                                    <ng-template #emptyCell><span></span></ng-template>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </ng-container>
+                    <tr *ngIf="bills.length === 0">
+                        <td colspan="12" class="text-muted">No records found.</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div> -->
+
+
+
+</div>

@@ -88,7 +88,7 @@
           </div>
         </div>
 
-        <button type="button" class="btn btn-success me-2 my-1" (click)="addInvoiceItems()">
+        <button type="button" class="btn btn-success me-2 my-1" (click)="addInvoiceItems()" [disabled]="invoiceItemForm.invalid">
           {{ isEdit ? 'Update' : 'Save' }}
         </button>
         <button type="button" class="btn btn-secondary me-2 my-1" (click)="resetForm()">Reset</button>

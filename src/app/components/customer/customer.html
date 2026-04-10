@@ -1,0 +1,167 @@
+<div class="container mt-5" style="max-width: 1820px;">
+
+   <div class="card shadow mb-4" *ngIf="showForm">
+    <div class="card-header d-flex justify-content-between align-items-center"
+         style="background: linear-gradient(90deg, #1a1a2e, #006d7a); color: white;">
+      <strong>{{ isEdit ? 'Edit Customer' : 'Add Customer' }}</strong>
+      <button class="btn btn-light btn-sm" (click)="closeCard()">✖</button>
+    </div>
+
+    <div class="card-body">
+      <form [formGroup]="customerForm">
+
+        <div class="row">
+        
+          <div class="col-md-4 mb-3">
+            <label>Customer Name<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="customerName"
+              placeholder="Enter Customer Name"
+              [class.is-invalid]="f['customerName'].invalid && f['customerName'].touched">
+            <div class="text-danger" *ngIf="f['customerName'].invalid && f['customerName'].touched">
+              <small *ngIf="f['customerName'].errors?.['required']">Customer Name is required</small>
+              <small *ngIf="f['customerName'].errors?.['minlength']">Minimum 3 characters</small>
+            </div>
+          </div>
+         
+          <div class="col-md-4 mb-3">
+            <label>Bill To<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="billTo"
+              placeholder="Enter Bill To"
+              [class.is-invalid]="f['billTo'].invalid && f['billTo'].touched">
+            <div class="text-danger" *ngIf="f['billTo'].invalid && f['billTo'].touched">
+              <small>Bill To is required</small>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label>Phone<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="phone"
+              placeholder="Enter Phone No" maxlength="10"
+              (keypress)="onlyNumbers($event)"
+              [class.is-invalid]="f['phone'].invalid && f['phone'].touched">
+            <div class="text-danger" *ngIf="f['phone'].invalid && f['phone'].touched">
+              <small *ngIf="f['phone'].errors?.['required']">Phone is required</small>
+              <small *ngIf="f['phone'].errors?.['pattern']">Enter valid 10-digit mobile</small>
+            </div>
+          </div>
+
+         
+          <div class="col-md-4 mb-3">
+            <label>Email<span class="text-danger">*</span></label>
+            <input type="email" class="form-control" formControlName="email"
+              placeholder="Enter customer email"
+              [class.is-invalid]="f['email'].invalid && f['email'].touched">
+            <div class="text-danger" *ngIf="f['email'].invalid && f['email'].touched">
+              <small *ngIf="f['email'].errors?.['required']">Email is required</small>
+              <small *ngIf="f['email'].errors?.['email']">Invalid email format</small>
+            </div>
+          </div>
+
+       
+          <div class="col-md-4 mb-3">
+            <label>Company Name<span class="text-danger">*</span></label>
+            <select class="form-control" formControlName="compId"
+              [class.is-invalid]="f['compId'].invalid && f['compId'].touched">
+              <option value="" disabled>-- Select Company --</option>
+              <option *ngFor="let c of companies" [value]="c.id">{{ c.companyName }}</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="f['compId'].invalid && f['compId'].touched">
+              <small>Please select a company.</small>
+            </div>
+          </div>
+
+         
+          <div class="col-md-12 mb-3">
+            <label>Address<span class="text-danger">*</span></label>
+            <textarea class="form-control" formControlName="address"
+              placeholder="Enter customer address"
+              [class.is-invalid]="f['address'].invalid && f['address'].touched">
+            </textarea>
+            <div class="text-danger" *ngIf="f['address'].invalid && f['address'].touched">
+              <small *ngIf="f['address'].errors?.['required']">Address is required</small>
+              <small *ngIf="f['address'].errors?.['minlength']">Minimum 5 characters</small>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="btn btn-success me-2 my-1"
+          (click)="addCustomer()" [disabled]="customerForm.invalid">
+          {{ isEdit ? 'Update' : 'Save' }}
+        </button>
+        <button type="button" class="btn btn-secondary me-2 my-1" (click)="resetForm()">Reset</button>
+        <button type="button" class="btn btn-danger my-1" (click)="closeCard()">Close</button>
+
+      </form>
+    </div>
+  </div>
+
+  <div class="card shadow">
+    <div class="card-header text-white d-flex justify-content-between align-items-center"
+         style="background: linear-gradient(90deg, #006d7a, #1a1a2e); color: white;">
+      <strong>Customer List</strong>
+      <button class="btn btn-light btn-sm fw-semibold shadow-sm"
+        style="color:#006d7a;" (click)="openForm()">+ Add Customer</button>
+    </div>
+
+    <div class="card-body table-responsive">
+      <table class="table table-bordered table-hover text-center">
+        <thead class="table-light">
+          <tr>
+            <th>Customer Name</th>
+            <th>Bill To</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Company</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of customers">
+            <td>{{ c.customerName }}</td>
+            <td>{{ c.billTo }}</td>
+            <td>{{ c.phone }}</td>
+            <td>{{ c.email }}</td>
+            <td>{{c.companyName}}</td>
+            <td>{{ c.address }}</td>
+            <td>
+              <button class="btn btn-warning btn-sm me-2 my-1" (click)="updateCustomer(c)">✏️ Edit</button>
+              <button class="btn btn-secondary btn-sm me-2 my-1" (click)="openModal(c)">📄 Details</button>
+              <button class="btn btn-danger btn-sm my-1" (click)="deleteCustomer(c.id)">❌ Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal fade show d-block" tabindex="-1"
+    *ngIf="detailCustomer" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow">
+        <div class="modal-header"
+             style="background: linear-gradient(90deg, #006d7a, #1a1a2e); color: white;">
+          <h5 class="modal-title">Customer Details</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body p-3">
+          <table class="table table-borderless mb-0">
+            <tbody>
+              <tr><th>CustomerName</th> <td>{{ detailCustomer.customerName }}</td></tr>
+              <tr><th>Bill To</th>      <td>{{ detailCustomer.billTo }}</td></tr>
+              <tr><th>Phone</th>        <td>{{ detailCustomer.phone }}</td></tr>
+              <tr><th>Email</th>        <td>{{ detailCustomer.email }}</td></tr>
+              <tr><th>Company</th>      <td>{{detailCustomer.companyName}}</td></tr>
+              <tr><th>Address</th>      <td>{{ detailCustomer.address }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

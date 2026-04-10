@@ -8,6 +8,9 @@ import { Login } from './login/login';
 import { InvoiceComponent } from './components/in-voice/in-voice';
 import { MainLayout } from './layouts/main-layout/main-layout';
 import { authGuard } from './auth-guard';
+import { AddCustomer } from './components/customer/customer';
+import { AddBill } from './components/bill/bill';
+import { AddBillInfo } from './components/bill-info/bill-info';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -25,6 +28,9 @@ export const routes: Routes = [
             { path: 'addItem', component: AddInvoiceItem },
             { path: 'invoice/:invoiceId', component: InvoiceComponent },
             { path: 'product', component: AddProduct },
+            { path: 'customer', component: AddCustomer },
+            { path: 'bill', component: AddBill },
+            { path: 'billInfo', component: AddBillInfo },
         ]
     },
 
