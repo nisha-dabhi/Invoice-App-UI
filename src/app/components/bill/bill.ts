@@ -54,6 +54,10 @@ export class AddBill implements OnInit {
   }
 
   initForm(): void {
+    const today = new Date();
+    const due = new Date();
+    due.setDate(today.getDate() + 7);
+
     this.billForm = this.fb.group({
       custoId: ['', Validators.required],
       customerName: [''],
@@ -63,11 +67,11 @@ export class AddBill implements OnInit {
       productName: [''],
       price: [''],
       invoiceNo: ['', Validators.required],
-      date: ['', Validators.required],
-      dueDate: ['', Validators.required],
+      date: [today.toISOString().split('T')[0], Validators.required],
+      dueDate: [due.toISOString().split('T')[0], Validators.required],
       quantity: ['', [Validators.required, Validators.min(1)]],
-      disc: [0, [Validators.min(0), Validators.max(100)]],
-      tax: [0, [Validators.min(0), Validators.max(100)]],
+      disc: [0],
+      tax: [0],
       amount: ['']
     });
   }
@@ -76,7 +80,10 @@ export class AddBill implements OnInit {
 
   loadBills(): void {
     this.billService.getAllBill().subscribe({
-      next: (res) => this.bills = res,
+      next: (res) => {
+        this.bills = res;
+        this.generateInvoiceNo();
+      },
       error: (err) => console.error('Failed to load bills', err)
     });
   }
@@ -159,9 +166,11 @@ export class AddBill implements OnInit {
       this.tempBills[this.editIndex] = row;
       this.isEdit = false;
       this.editIndex = -1;
+      alert('UpdatedRow updated Successfully');
       this.toastr.info('Row updated in list', 'Updated');
     } else {
       this.tempBills.push(row);
+      alert('Row added Successfully');
       this.toastr.info('Row added to list', 'Added');
     }
 
@@ -196,102 +205,16 @@ export class AddBill implements OnInit {
     this.selectedProductPrice = 0;
   }
 
-  // get groupedBills() {
-  //   const groups: { [key: string]: { invoiceNo: string; customerName: string; companyName: string; date: any; dueDate: any; items: Bill[] } } = {};
-
-  //   this.bills.forEach(b => {
-  //     const key = b.invoiceNo;
-  //     if (!groups[key]) {
-  //       groups[key] = {
-  //         invoiceNo: b.invoiceNo,
-  //         customerName: b.customerName,
-  //         companyName: b.companyName,
-  //         date: b.date,
-  //         dueDate: b.dueDate,
-  //         items: []
-  //       };
-  //     }
-  //     groups[key].items.push(b);
-  //   });
-
-  //   return Object.values(groups);
-  // }
- 
-
-  // editBill(b: Bill): void {
-  //   this.isEdit = true;
-  //   this.showForm = true;
-  //   this.editIndex = -1;
-  //   this.editId = b.id;
-
-  //   const customer = this.customers.find(c => c.id == b.custoId);
-  //   const product = this.products.find(p => p.id == b.prodId);
-
-  //   this.selectedCustomerName = b.customerName;
-  //   this.selectedCompanyName = b.companyName;
-  //   this.selectedProductPrice = b.price;
-
-  //   this.billForm.patchValue({
-  //     custoId: b.custoId,
-  //     customerName: b.customerName,
-  //     compId: b.compId,
-  //     companyName: b.companyName,
-  //     prodId: b.prodId,
-  //     productName: b.productName,
-  //     price: b.price,
-  //     invoiceNo: b.invoiceNo,
-  //     date: b.date,
-  //     dueDate: b.dueDate,
-  //     quantity: b.quantity,
-  //     disc: b.disc ?? 0,
-  //     tax: b.tax ?? 0,
-  //     amount: b.amount
-  //   });
-  // }
-
   updateBillInDB(b: Bill): void {
     this.billService.updateBill(b.id, b).subscribe({
       next: () => {
+        alert('Bill Updated Successfully');
         this.toastr.success('Bill updated!', 'Updated');
         this.loadBills();
       },
       error: (err) => {
+        alert('Error!');
         this.toastr.error('Update failed!', 'Error');
-      }
-    });
-  }
-
-  saveToDB(index: number): void {
-    const bill = this.tempBills[index];
-
-    this.billService.addBill(bill).subscribe({
-      next: (savedBill: Bill) => {
-
-        const billInfo: BillInfo = {
-          id: 0,
-          invoiceNo: savedBill.invoiceNo,
-          date: savedBill.date,
-          dueDate: savedBill.dueDate,
-          companyName: savedBill.companyName,
-          clientName: savedBill.customerName,
-          amount: savedBill.amount
-        };
-
-        this.billInfoService.addBillInfo(billInfo).subscribe({
-          next: () => {
-            this.toastr.success('Bill saved successfully!', 'Saved');
-            this.tempBills.splice(index, 1);
-            this.loadBills();
-          },
-          error: (err) => {
-            console.error('BillInfo save failed', err);
-            this.toastr.error('BillInfo save failed!', 'Error');
-          }
-        });
-      },
-      error: (err) => {
-        console.error('Bill save failed', err);
-        this.toastr.error('Bill save failed!', 'Error');
       }
     });
   }
@@ -317,21 +240,24 @@ export class AddBill implements OnInit {
   deleteBill(id: number): void {
     if (confirm('Are you sure to delete?')) {
       this.billService.deleteBill(id).subscribe(() => {
+        alert('Deleted Successfully');
         this.toastr.error('Bill deleted!', 'Deleted');
         this.loadBills();
       });
     }
   }
 
-
   openForm(): void {
     this.showForm = true;
     this.isEdit = false;
+    this.generateInvoiceNo();
   }
 
   closeCard(): void {
     this.showForm = false;
   }
+
+
 
   resetForm(): void {
     this.billForm.reset({ disc: 0, tax: 0 });
@@ -340,7 +266,138 @@ export class AddBill implements OnInit {
     this.selectedCompanyName = '';
     this.selectedCustomerName = '';
     this.selectedProductPrice = 0;
+    this.generateInvoiceNo();
   }
 
- 
+  saveBills(index?: number): void {
+
+    if (index !== undefined) {
+      const bill = this.tempBills[index];
+      this.billService.addBill(bill).subscribe(res => {
+        const billInfo: BillInfo = {
+          id: 0,
+          invoiceNo: res.invoiceNo,
+          date: res.date,
+          dueDate: res.dueDate,
+          companyName: res.companyName,
+          clientName: res.customerName,
+          amount: res.amount
+        };
+
+        this.billInfoService.addBillInfo(billInfo).subscribe(() => {
+          alert('Saved Successfully');
+          this.toastr.success('Bill saved successfully!');
+          this.tempBills.splice(index, 1);
+          this.loadBills();
+        });
+
+      });
+    } else {
+      this.tempBills.forEach((bill, i) => {
+        this.billService.addBill(bill).subscribe(res => {
+          const billInfo: BillInfo = {
+            id: 0,
+            invoiceNo: res.invoiceNo,
+            date: res.date,
+            dueDate: res.dueDate,
+            companyName: res.companyName,
+            clientName: res.customerName,
+            amount: res.amount
+          };
+
+          this.billInfoService.addBillInfo(billInfo).subscribe(() => {
+            if (i === this.tempBills.length - 1) {
+              alert('All Saved Successfully');
+              this.toastr.success('All Bills Saved!');
+              this.tempBills = [];
+              this.loadBills();
+            }
+          });
+        });
+      });
+    }
+  }
+
+  generateInvoiceNo(): void {
+    this.billService.getAllBill().subscribe({
+      next: (allBills) => {
+
+        const allInvoiceNos = [
+          ...allBills.map(b => b.invoiceNo),
+          ...this.tempBills.map(b => b.invoiceNo)
+        ];
+
+        const numbers = allInvoiceNos
+          .filter(n => n && n.startsWith('INV'))
+          .map(n => parseInt(n.replace('INV', ''), 10))
+          .filter(n => !isNaN(n));
+
+        const maxNo = numbers.length > 0 ? Math.max(...numbers) : 0;
+        const next = String(maxNo + 1).padStart(3, '0');
+        const invoiceNo = `INV${next}`;
+        this.billForm.get('invoiceNo')?.setValue(invoiceNo);
+      },
+      error: () => {
+        this.billForm.get('invoiceNo')?.setValue('INV001');
+      }
+    });
+  }
+
 }
+
+
+
+
+
+// get groupedBills() {
+//   const groups: { [key: string]: { invoiceNo: string; customerName: string; companyName: string; date: any; dueDate: any; items: Bill[] } } = {};
+
+//   this.bills.forEach(b => {
+//     const key = b.invoiceNo;
+//     if (!groups[key]) {
+//       groups[key] = {
+//         invoiceNo: b.invoiceNo,
+//         customerName: b.customerName,
+//         companyName: b.companyName,
+//         date: b.date,
+//         dueDate: b.dueDate,
+//         items: []
+//       };
+//     }
+//     groups[key].items.push(b);
+//   });
+
+//   return Object.values(groups);
+// }
+
+
+// editBill(b: Bill): void {
+//   this.isEdit = true;
+//   this.showForm = true;
+//   this.editIndex = -1;
+//   this.editId = b.id;
+
+//   const customer = this.customers.find(c => c.id == b.custoId);
+//   const product = this.products.find(p => p.id == b.prodId);
+
+//   this.selectedCustomerName = b.customerName;
+//   this.selectedCompanyName = b.companyName;
+//   this.selectedProductPrice = b.price;
+
+//   this.billForm.patchValue({
+//     custoId: b.custoId,
+//     customerName: b.customerName,
+//     compId: b.compId,
+//     companyName: b.companyName,
+//     prodId: b.prodId,
+//     productName: b.productName,
+//     price: b.price,
+//     invoiceNo: b.invoiceNo,
+//     date: b.date,
+//     dueDate: b.dueDate,
+//     quantity: b.quantity,
+//     disc: b.disc ?? 0,
+//     tax: b.tax ?? 0,
+//     amount: b.amount
+//   });
+// }

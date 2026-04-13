@@ -76,7 +76,6 @@ export class AddInvoiceItem {
   }
 
   loadInvoiceItems() {
-    debugger
     this.invoiceItemService.getAllInvoiceItem().subscribe(res => {
       this.invoiceItems = res;
       this.buildGroups();

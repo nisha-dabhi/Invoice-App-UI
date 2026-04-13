@@ -4,6 +4,8 @@ import { BillInfoService } from '../../services/bill-info-service';
 import { Bill } from '../../models/bill';
 import { BillInfo } from '../../models/bill-info';
 import { ToastrService } from 'ngx-toastr';
+import { BillService } from '../../services/bill-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bill-info',
@@ -13,22 +15,37 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AddBillInfo implements OnInit {
 
-  billInfos: any[] = [];
+  billInfos: BillInfo[] = [];
   detailBill: any = null;
+  selectedBillDetails: any[] = [];
+  selectedInvoice: any;
 
-  
   detailGroup: any = null;
 
-  constructor(private billInfoService: BillInfoService , private toastr: ToastrService) { }
+  constructor(private billInfoService: BillInfoService, private router: Router,
+    private billService: BillService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    this.loadBillInfos();
+    this.loadBillInfos()
   }
 
   loadBillInfos(): void {
     this.billInfoService.getAllBillInfos().subscribe({
       next: (data) => this.billInfos = data,
       error: (err) => console.error('Failed to load bill info', err)
+    });
+  }
+
+  openDetails(bill: any): void {
+    this.selectedInvoice = bill;
+
+    this.billService.getAllBill().subscribe({
+      next: (res: Bill[]) => {
+        this.selectedBillDetails = res.filter(b => b.invoiceNo === bill.invoiceNo);
+      },
+      error: () => {
+        this.toastr.error('Failed to load details');
+      }
     });
   }
 
@@ -52,46 +69,45 @@ export class AddBillInfo implements OnInit {
     }
   }
 
-  get groupedBillInfos() {
-    const groups: { [key: string]: { invoiceNo: string; date: any; dueDate: any; 
-                     companyName: string; clientName: string; items: any[] } } = {};
-
-    this.billInfos.forEach(b => {
-      const key = b.invoiceNo;
-      if (!groups[key]) {
-        groups[key] = {
-          invoiceNo: b.invoiceNo,
-          date: b.date,
-          dueDate: b.dueDate,
-          companyName: b.companyName,
-          clientName: b.clientName,
-          items: []
-        };
-      }
-      groups[key].items.push(b);
-    });
-
-    return Object.values(groups);
-  }
+  goToInvoice(id: number | string): void {
+  this.router.navigate(['/invoicePage', id]);
+}
 
   get totalAmount(): number {
     return this.billInfos.reduce((sum, b) => sum + b.amount, 0);
   }
-  
-  openDetailModal(group: any): void {
-  this.detailGroup = {
-    invoiceNo:    group.invoiceNo,
-    customerName: group.customerName,
-    companyName:  group.companyName,
-    date:         group.date,
-    dueDate:      group.dueDate,
-    items:        [...group.items]  
-  };
-  console.log('detailGroup:', this.detailGroup); 
-}
+
+  openDetailModal(b: any): void {
+    this.detailGroup = null;
+
+    this.billService.getAllBill().subscribe({
+      next: (res: Bill[]) => {
+        const items = res.filter((bill: Bill) => bill.invoiceNo === b.invoiceNo);
+
+        setTimeout(() => {
+          this.detailGroup = {
+            id: b.id,
+            invoiceNo: b.invoiceNo,
+            customerName: b.clientName,
+            companyName: b.companyName,
+            date: b.date,
+            dueDate: b.dueDate,
+            items: items
+          };
+        });
+      },
+      error: () => {
+        this.toastr.error('Failed to load details');
+      }
+    });
+  }
 
   closeDetailModal(): void {
     this.detailGroup = null;
+  }
+
+  getGroupTotal(items: any[]): number {
+    return items.reduce((sum, x) => sum + x.amount, 0);
   }
 
   get groupTotal(): number {
@@ -99,27 +115,5 @@ export class AddBillInfo implements OnInit {
     return this.detailGroup.items.reduce((sum: number, b: Bill) => sum + b.amount, 0);
   }
 
-   saveInvoiceToBillInfo(group: any): void {
-    const totalAmount = group.items.reduce((sum: number, b: Bill) => sum + b.amount, 0);
-
-    const billInfo: BillInfo = {
-      id: 0,
-      invoiceNo: group.invoiceNo,
-      date: group.date,
-      dueDate: group.dueDate,
-      companyName: group.companyName,
-      clientName: group.customerName,
-      amount: +totalAmount.toFixed(2)
-    };
-
-    this.billInfoService.addBillInfo(billInfo).subscribe({
-      next: () => {
-        this.toastr.success('Invoice saved to Bill Info!', 'Success');
-      },
-      error: (err) => {
-        this.toastr.error('BillInfo save failed!', 'Error');
-      }
-    });
-  }
 
 }

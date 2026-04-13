@@ -11,6 +11,7 @@ import { authGuard } from './auth-guard';
 import { AddCustomer } from './components/customer/customer';
 import { AddBill } from './components/bill/bill';
 import { AddBillInfo } from './components/bill-info/bill-info';
+import { InvoicePage } from './components/invoice-page/invoice-page';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -31,6 +32,7 @@ export const routes: Routes = [
             { path: 'customer', component: AddCustomer },
             { path: 'bill', component: AddBill },
             { path: 'billInfo', component: AddBillInfo },
+            { path: 'invoicePage/:invoiceNo', component: InvoicePage }
         ]
     },
 

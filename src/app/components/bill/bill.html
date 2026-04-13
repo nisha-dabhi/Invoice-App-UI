@@ -12,6 +12,16 @@
                 <div class="row">
 
                     <div class="col-md-4 mb-3">
+                        <label>Invoice No<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="invoiceNo" [readonly]="true"
+                            style="background-color: #e9ecef; cursor: not-allowed;"
+                            [class.is-invalid]="f['invoiceNo'].invalid && f['invoiceNo'].touched">
+                        <div class="text-danger" *ngIf="f['invoiceNo'].invalid && f['invoiceNo'].touched">
+                            <small>Invoice No is required</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
                         <label>Customer Name<span class="text-danger">*</span></label>
                         <select class="form-control" formControlName="custoId" (change)="onCustomerChange()"
                             [class.is-invalid]="f['custoId'].invalid && f['custoId'].touched">
@@ -28,18 +38,8 @@
                         <input class="form-control" [value]="selectedCompanyName" placeholder="Auto-filled" readonly>
                     </div>
 
-                    <!-- <div class="col-md-4 mb-3">
-                        <label>Invoice No<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" formControlName="invoiceNo"
-                            placeholder="Enter Invoice No"
-                            [class.is-invalid]="f['invoiceNo'].invalid && f['invoiceNo'].touched">
-                        <div class="text-danger" *ngIf="f['invoiceNo'].invalid && f['invoiceNo'].touched">
-                            <small>Invoice No is required</small>
-                        </div>
-                    </div> -->
-
-                    <div class="col-md-4 mb-3">
-                        <label>Date<span class="text-danger">*</span></label>
+                    <div class="col-md-4 mb-5">
+                        <label>Invoice Date <span class="text-danger">*</span></label>
                         <input type="date" class="form-control" formControlName="date" [max]="today"
                             [class.is-invalid]="f['date'].invalid && f['date'].touched">
                         <div class="text-danger" *ngIf="f['date'].invalid && f['date'].touched">
@@ -47,7 +47,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4 mb-5">
+                    <div class="col-md-4 mb-3">
                         <label>Due Date<span class="text-danger">*</span></label>
                         <input type="date" class="form-control" formControlName="dueDate"
                             [class.is-invalid]="f['dueDate'].invalid && f['dueDate'].touched">
@@ -55,6 +55,7 @@
                             <small>Due Date is required</small>
                         </div>
                     </div>
+
                     <hr>
 
                     <div class="col-md-4 mt-3 mb-3">
@@ -107,7 +108,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-4 mb-4">
                         <label>Amount</label>
                         <input type="number" class="form-control" formControlName="amount" placeholder="Auto-calculated"
                             readonly>
@@ -156,23 +157,29 @@
                         <td>{{ b.customerName }}</td>
                         <td>{{ b.companyName }}</td>
                         <td>{{ b.productName }}</td>
-                        <td>{{ b.price | number:'1.2-2' }}</td>
+                        <td>{{ b.price }}</td>
                         <td>{{ b.quantity }}</td>
-                        <td>{{ b.disc ?? 0 }}</td>
-                        <td>{{ b.tax ?? 0 }}</td>
-                        <td>{{ b.amount | number:'1.2-2' }}</td>
+                        <td>{{ b.disc }}</td>
+                        <td>{{ b.tax }}</td>
+                        <td>{{ b.amount }}</td>
                         <td>
-                            <button class="btn btn-success btn-sm me-1" (click)="saveToDB(i)">💾 Save</button>
-                            <button class="btn btn-warning btn-sm me-1" (click)="editTempRow(i)">✏️ Edit</button>
-                            <button class="btn btn-danger btn-sm" (click)="removeTempRow(i)">❌ Remove</button>
+                         <!-- <button class="btn btn-success btn-sm me-1 my-1" (click)="saveToDB(i)">💾 Save</button> -->
+                            <button class="btn btn-warning btn-sm me-1 my-1" (click)="editTempRow(i)">✏️ Edit</button>
+                            <button class="btn btn-danger btn-sm me-1 my-1" (click)="removeTempRow(i)">❌ Remove</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
+
+            <div class="text-end mt-3">
+                <button class="btn btn-success" (click)="saveBills()">💾 Save All</button>
+            </div>
         </div>
     </div>
 
-    <!-- <div class="card shadow mt-2">
+</div>
+
+<!-- <div class="card shadow mt-2">
         <div class="card-header d-flex justify-content-between align-items-center"
             style="background: linear-gradient(135deg, #1a6b9a, #0d3b6e, #0a192f); color: white;">
             <strong>Bill List</strong>
@@ -253,7 +260,3 @@
             </table>
         </div>
     </div> -->
-
-
-
-</div>

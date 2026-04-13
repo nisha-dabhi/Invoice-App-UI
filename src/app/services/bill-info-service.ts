@@ -12,26 +12,24 @@ export class BillInfoService {
 
   constructor(private http: HttpClient) { }
 
+ 
   getAllBillInfos(): Observable<BillInfo[]> {
     return this.http.get<BillInfo[]>(this.apiUrl);
   }
 
   addBillInfo(item: BillInfo): Observable<BillInfo> {
-    return this.http.post<BillInfo>(`${this.apiUrl}`, item);
+    return this.http.post<BillInfo>(this.apiUrl, item);
   }
 
-  updateBillInfo(id: number, data: BillInfo) {
-    return this.http.put(`${this.apiUrl}/${id}`, data);
+  updateBillInfo(id: number, data: BillInfo): Observable<BillInfo> {
+    return this.http.put<BillInfo>(`${this.apiUrl}/${id}`, data);
   }
 
-  getBillInfoDetails(id: number): Observable<BillInfo[]> {
-    return this.http.get<BillInfo[]>(`${this.apiUrl}/${id}`);
+  getBillInfoDetails(id: number): Observable<BillInfo> {
+    return this.http.get<BillInfo>(`${this.apiUrl}/${id}`);
   }
 
-  deleteBillInfo(id: number) {
+  deleteBillInfo(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
-  }
-  getBillInfoById(id: number): Observable<BillInfo[]> {
-    return this.http.get<BillInfo[]>(`${this.apiUrl}/${id}`);
   }
 }

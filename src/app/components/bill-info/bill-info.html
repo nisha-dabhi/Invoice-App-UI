@@ -21,41 +21,23 @@
           </tr>
         </thead>
         <tbody>
-          <ng-container *ngFor="let group of groupedBillInfos; let gi = index">
-            <tr *ngFor="let b of group.items; let i = index">
 
-              <ng-container *ngIf="i === 0">
-                <td [attr.rowspan]="group.items.length" class="align-middle">
-                  {{ gi + 1 }}
-                </td>
-                <td [attr.rowspan]="group.items.length" class="align-middle fw-semibold">
-                  {{ group.invoiceNo }}
-                </td>
-                <td [attr.rowspan]="group.items.length" class="align-middle">
-                  {{ group.date | date:'dd/MM/yyyy' }}
-                </td>
-                <td [attr.rowspan]="group.items.length" class="align-middle">
-                  {{ group.dueDate | date:'dd/MM/yyyy' }}
-                </td>
-                <td [attr.rowspan]="group.items.length" class="align-middle">
-                  {{ group.companyName }}
-                </td>
-                <td [attr.rowspan]="group.items.length" class="align-middle">
-                  {{ group.clientName }}
-                </td>
-              </ng-container>
-
-              <td>{{ b.amount | number:'1.2-2' }}</td>
-
-              <td>
-                <button class="btn btn-secondary btn-sm me-1"
-                  (click)="openDetailModal(group)">📄 Details</button>
-                <button class="btn btn-danger btn-sm"
-                  (click)="delete(b.id)">❌ Delete</button>
-              </td>
-
-            </tr>
-          </ng-container>
+          <tr *ngFor="let b of billInfos; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td class="fw-semibold">{{ b.invoiceNo }}</td>
+            <td>{{ b.date | date:'dd/MM/yyyy' }}</td>
+            <td>{{ b.dueDate | date:'dd/MM/yyyy' }}</td>
+            <td>{{ b.companyName }}</td>
+            <td>{{ b.clientName }}</td>
+            <td class="fw-bold">{{ b.amount | number:'1.2-2' }}</td>
+            <td>
+              <button class="btn btn-secondary btn-sm me-1 my-1" (click)="openDetailModal(b)">📄 Details</button>
+              <button class="btn btn-danger btn-sm me-1 my-1" (click)="delete(b.id)">❌ Delete</button>
+              <button class="btn btn-info btn-sm me-1 , my-1" (click)="goToInvoice(b.id)">
+                🧾 Invoice
+              </button>
+            </td>
+          </tr>
 
           <tr *ngIf="billInfos.length === 0">
             <td colspan="8" class="text-muted">No records found.</td>
@@ -63,146 +45,102 @@
 
         </tbody>
 
-        <!-- <tfoot *ngIf="billInfos.length > 0">
-          <tr class="table-dark fw-bold">
-            <td colspan="6" class="text-end">Total Amount :</td>
-            <td>{{ totalAmount | number:'1.2-2' }}</td>
-            <td></td>
-          </tr>
-        </tfoot> -->
-
       </table>
     </div>
   </div>
 
-  <!-- <div class="modal fade show d-block" tabindex="-1"
-    *ngIf="detailBill" style="background: rgba(0,0,0,0.5);">
-    <div class="modal-dialog modal-dialog-centered">
+  <div class="modal fade show d-block" tabindex="-1" *ngIf="detailGroup" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content shadow">
-        <div class="modal-header"
-          style="background: linear-gradient(135deg, #1a6b9a, #0d3b6e, #0a192f); color: white;">
-          <h5 class="modal-title">📄 Bill Details</h5>
-          <button type="button" class="btn-close btn-close-white"
-            (click)="closeModal()"></button>
+
+        <div class="modal-header" style="background: linear-gradient(135deg, #0a192f, #0d3b6e, #1a6b9a); color: white;">
+          <h5 class="modal-title">📄 Invoice Details — {{ detailGroup.invoiceNo }}</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeDetailModal()"></button>
         </div>
+
         <div class="modal-body p-3">
-          <table class="table table-borderless mb-0">
-            <tbody>
-              <tr><th style="width:40%">Invoice No</th>  <td>{{ detailBill.invoiceNo }}</td></tr>
-              <tr><th>Date</th>         <td>{{ detailBill.date | date:'dd/MM/yyyy' }}</td></tr>
-              <tr><th>Due Date</th>     <td>{{ detailBill.dueDate | date:'dd/MM/yyyy' }}</td></tr>
-              <tr><th>Company Name</th> <td>{{ detailBill.companyName }}</td></tr>
-              <tr><th>Client Name</th>  <td>{{ detailBill.clientName }}</td></tr>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <table class="table table-borderless mb-0">
+                <tbody>
+                  <tr>
+                    <th style="width: 45%">Invoice No</th>
+                    <td>{{ detailGroup.invoiceNo }}</td>
+                  </tr>
+                  <tr>
+                    <th>Date</th>
+                    <td>{{ detailGroup.date | date:'dd/MM/yyyy' }}</td>
+                  </tr>
+                  <tr>
+                    <th>Due Date</th>
+                    <td>{{ detailGroup.dueDate | date:'dd/MM/yyyy' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <table class="table table-borderless mb-0">
+                <tbody>
+                  <tr>
+                    <th style="width: 45%">Customer</th>
+                    <td>{{ detailGroup.customerName }}</td>
+                  </tr>
+                  <tr>
+                    <th>Company</th>
+                    <td>{{ detailGroup.companyName }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <hr>
+
+          <h6 class="fw-semibold mb-2">🛒 Products</h6>
+          <table class="table table-bordered text-center mb-0">
+            <thead class="table-light">
               <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Disc%</th>
+                <th>Tax%</th>
                 <th>Amount</th>
-                <td class="fw-bold text-success">
-                  {{ detailBill.amount | number:'1.2-2' }}
-                </td>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr *ngFor="let b of detailGroup.items; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ b.productName }}</td>
+                <td>{{ b.price | number:'1.2-2' }}</td>
+                <td>{{ b.quantity }}</td>
+                <td>{{ b.disc ?? 0 }}</td>
+                <td>{{ b.tax ?? 0 }}</td>
+                <td>{{ b.amount | number:'1.2-2' }}</td>
               </tr>
             </tbody>
+            <tfoot>
+              <tr class="table-dark fw-bold">
+                <td colspan="6" class="text-end">Total Amount :</td>
+                <td>{{ groupTotal | number:'1.2-2' }}</td>
+              </tr>
+            </tfoot>
           </table>
+
         </div>
+
         <div class="modal-footer">
-          <button class="btn btn-danger me-2" (click)="delete(detailBill.id)">❌ Delete</button>
-          <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+          <button class="btn btn-success me-2" (click)="goToInvoice(detailGroup.id); closeDetailModal()">
+            💾 Invoice
+          </button>
+          <button class="btn btn-secondary" (click)="closeDetailModal()">Close</button>
         </div>
+
       </div>
     </div>
-  </div> -->
-
-      <div class="modal fade show d-block" tabindex="-1" *ngIf="detailGroup" style="background: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content shadow">
-
-                <div class="modal-header"
-                    style="background: linear-gradient(135deg, #0a192f, #0d3b6e, #1a6b9a); color: white;">
-                    <h5 class="modal-title">📄 Invoice Details — {{ detailGroup.invoiceNo }}</h5>
-                    <button type="button" class="btn-close btn-close-white" (click)="closeDetailModal()"></button>
-                </div>
-
-                <div class="modal-body p-3">
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <table class="table table-borderless mb-0">
-                                <tbody>
-                                    <tr>
-                                        <th style="width: 45%">Invoice No</th>
-                                        <td>{{ detailGroup.invoiceNo }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Date</th>
-                                        <td>{{ detailGroup.date | date:'dd/MM/yyyy' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Due Date</th>
-                                        <td>{{ detailGroup.dueDate | date:'dd/MM/yyyy' }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-md-6">
-                            <table class="table table-borderless mb-0">
-                                <tbody>
-                                    <tr>
-                                        <th style="width: 45%">Customer</th>
-                                        <td>{{ detailGroup.customerName }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Company</th>
-                                        <td>{{ detailGroup.companyName }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <h6 class="fw-semibold mb-2">🛒 Products</h6>
-                    <table class="table table-bordered text-center mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Product</th>
-                                <th>Price</th>
-                                <th>Qty</th>
-                                <th>Disc%</th>
-                                <th>Tax%</th>
-                                <th>Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let b of detailGroup.items; let i = index">
-                                <td>{{ i + 1 }}</td>
-                                <td>{{ b.productName }}</td>
-                                <td>{{ b.price | number:'1.2-2' }}</td>
-                                <td>{{ b.quantity }}</td>
-                                <td>{{ b.disc ?? 0 }}</td>
-                                <td>{{ b.tax ?? 0 }}</td>
-                                <td>{{ b.amount | number:'1.2-2' }}</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr class="table-dark fw-bold">
-                                <td colspan="6" class="text-end">Total Amount :</td>
-                                <td>{{ groupTotal | number:'1.2-2' }}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-success me-2"
-                        (click)="saveInvoiceToBillInfo(detailGroup); closeDetailModal()">
-                        💾 Save Invoice
-                    </button>
-                    <button class="btn btn-secondary" (click)="closeDetailModal()">Close</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
+  </div>
 
 </div>

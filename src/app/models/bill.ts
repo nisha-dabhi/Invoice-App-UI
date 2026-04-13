@@ -21,4 +21,15 @@ export interface Bill {
     phone: string;
     address: string;
   };
+
+  customer : {
+    id : number;
+    customerName : string;
+    billTo : string;
+    phone : string;
+    email : string;
+    address : string;
+    compId : number;
+    companyName : string;
+}
 }

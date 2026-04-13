@@ -2,11 +2,12 @@
   <nav class="navbar navbar-expand-lg sticky-top " style="background: linear-gradient(90deg, #141e30, #243b55);">
     <div class="container-fluid">
       <a routerLink="/product" class="navbar-brand text-white">Invoice Page</a>
-      <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent">
+      <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse position-relative d-flex align-items-center" id="navbarSupportedContent">
+
+      <div class="collapse navbar-collapse" id="navbarMain">
+
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link text-white" routerLinkActive="active" routerLink="/product">Product</a>
@@ -23,26 +24,28 @@
           <li class="nav-item">
             <a class="nav-link text-white" routerLinkActive="active" routerLink="/user">User</a>
           </li>
-        </ul>       
+        </ul>
 
-        <div class="position-absolute start-50 translate-middle-x d-flex gap-2" style="white-space: nowrap;">
-
-          <a routerLink="/customer" routerLinkActive="active" class="text-white fw-semibold text-decoration-none"
-            style="border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; padding: 6px 16px; font-size: 14px;">
-            👤 Customer
-          </a>
-
-          <a routerLink="/bill" routerLinkActive="active" class="text-white fw-semibold text-decoration-none"
-            style="border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; padding: 6px 16px; font-size: 14px;">
-            🧾 Bill
-          </a>
-
-          <a routerLink="/billInfo" routerLinkActive="active" class="text-white fw-semibold text-decoration-none"
-            style="border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; padding: 6px 16px; font-size: 14px;">
-            📋 Bill Info
-          </a>
-
-        </div>
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 d-flex flex-row gap-2">
+          <li class="nav-item">
+            <a routerLink="/customer" routerLinkActive="active" class="text-white fw-semibold text-decoration-none"
+              style="border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; padding: 6px 16px; font-size: 14px;">
+              👤 Customer
+            </a>
+          </li>
+          <li class="nav-item">
+            <a routerLink="/bill" routerLinkActive="active" class="text-white fw-semibold text-decoration-none"
+              style="border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; padding: 6px 16px; font-size: 14px;">
+              🧾 Bill
+            </a>
+          </li>
+          <li class="nav-item">
+            <a routerLink="/billInfo" routerLinkActive="active" class="text-white fw-semibold text-decoration-none"
+              style="border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; padding: 6px 16px; font-size: 14px;">
+              📋 Bill Info
+            </a>
+          </li>
+        </ul>
         <form class="d-flex">
           <input class="form-control me-2" type="search" placeholder="Search">
           <button class="btn btn-outline-success me-2" type="submit">Search</button>
