@@ -34,7 +34,7 @@
                         [(ngModel)]="loginData.password" #password="ngModel" required
                         [class.input-error]="password.invalid && (password.touched || loginForm.submitted)">
                 </div>
-                <div  class="error-msg text-danger" *ngIf="password.invalid && password.touched">
+                <div class="error-msg text-danger" *ngIf="password.invalid && password.touched">
                     <i class="bi bi-exclamation-circle-fill"></i>
                     <small *ngIf="password.errors?.['required']">Password is required.</small>
                     <small *ngIf="password.errors?.['minlength']">Minimum 8 characters.</small>
@@ -48,9 +48,10 @@
             </div>
 
             <div class="d-flex justify-content-end mb-3">
-                <span routerLink="/register" class="register-link">
-                    <i class="bi bi-person-plus me-1"></i><b>Don't have an account? Register here</b>
-                </span>
+                <a routerLink="/register" class="register-link">
+                    <i class="bi bi-person-plus me-1"></i>
+                    <b>Don't have an account? Register here</b>
+                </a>
             </div>
         </form>
     </div>

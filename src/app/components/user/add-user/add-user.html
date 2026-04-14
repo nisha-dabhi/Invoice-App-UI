@@ -132,7 +132,7 @@
             <td>{{ u.lastName }}</td>
             <td>{{ u.phone }}</td>
             <td>{{ u.email }}</td>
-            <td>{{ u.passwordHash }}</td>
+            <td><span class="pwd-badge">••••••••</span></td>
             <td>{{ u.compId }}</td>
             <td>
               <button class="btn btn-warning btn-sm me-1 my-1" (click)="updateUser(u)">✏️Edit</button>
@@ -187,3 +187,5 @@
   </div>
 
 </div>
+
+ 

@@ -1,0 +1,192 @@
+/* 🔥 Background */
+.auth-container {
+  height: 100vh;
+  background: linear-gradient(135deg, #49437a, #584e9b, #494279);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 🔥 Card */
+.auth-card {
+  width: 600px;
+  padding: 32px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 12px 45px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  transition: 0.3s;
+}
+
+/* 🔹 Title */
+.auth-card h3 {
+  font-weight: 600;
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+}
+
+/* 🔹 Section Titles */
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 18px 0 10px;
+  opacity: 0.9;
+}
+
+/* 🔹 Label */
+.custom-label {
+  font-size: 12.5px;
+  margin-bottom: 6px;
+  display: block;
+  color: rgba(255,255,255,0.85);
+}
+
+/* 🔹 Input Wrapper */
+.input-wrap {
+  position: relative;
+}
+
+/* 🔹 Icon */
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+}
+
+/* 🔹 Input Field */
+.custom-input {
+  width: 100%;
+  padding: 11px 12px 11px 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+/* 🔹 Placeholder */
+.custom-input::placeholder {
+  color: rgba(255,255,255,0.65);
+}
+
+/* 🔹 Hover */
+.custom-input:hover {
+  border-color: rgba(255,255,255,0.5);
+}
+
+/* 🔹 Focus Effect */
+.custom-input:focus {
+  outline: none;
+  border-color: #ffffff;
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 10px rgba(255,255,255,0.4);
+}
+
+/* 🔴 Error Border */
+.input-error {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 6px rgba(255, 77, 79, 0.5);
+}
+
+/* 🔴 Error Message */
+.error-msg {
+  font-size: 11.5px;
+  color: #ffb3b3;
+  margin-top: 4px;
+}
+
+/* 🔥 Button Container */
+.btn-group-custom {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+/* 🔹 Common Button */
+.btn-premium {
+  flex: 1;
+  padding: 12px;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ✨ Shine Effect */
+.btn-premium::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: 0.6s;
+}
+
+.btn-premium:hover::before {
+  left: 120%;
+}
+
+/* 🔹 Login Button */
+.btn-login {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.4);
+  backdrop-filter: blur(10px);
+}
+
+.btn-login:hover {
+  background: #ffffff;
+  color: #5f5aa2;
+  transform: translateY(-2px);
+}
+
+/* 🔹 Register Button */
+.btn-register {
+  background: linear-gradient(45deg, #7b2ff7, #f107a3);
+  color: #fff;
+  box-shadow: 0 5px 18px rgba(123, 47, 247, 0.5);
+}
+
+.btn-register:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(123, 47, 247, 0.7);
+}
+
+/* 🔹 Disabled */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 👁 Toggle Icon */
+.toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 10;
+  color: rgba(255,255,255,0.7);
+}
+
+.toggle-icon:hover {
+  color: #fff;
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .auth-card {
+    width: 95%;
+    padding: 20px;
+  }
+}

@@ -1,0 +1,266 @@
+/* ── Layout ── */
+.content-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f6f9;
+}
+
+/* ── Navbar ── */
+.navbar {
+  background: linear-gradient(90deg, #141e30, #243b55);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  padding: 0.5rem 1.5rem;
+  z-index: 1040;
+}
+
+.navbar-brand {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff !important;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+  padding: 0.4rem 0.75rem !important;
+  border-radius: 6px;
+}
+
+.nav-link:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-link.active {
+  color: #fff !important;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ── Middle pill buttons ── */
+.navbar-nav .border.rounded {
+  transition: all 0.2s;
+  font-size: 0.85rem;
+}
+
+.navbar-nav .border.rounded:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Avatar Button ── */
+.avatar-btn {
+  width: 38px;
+  height: 38px;
+  background-color: #e8f5e1;
+  border: 2px solid #c0dd97;
+  color: #3b6d11;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0;
+  border-radius: 50% !important;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-btn:hover,
+.avatar-btn:focus {
+  background-color: #c0dd97;
+  color: #27500a;
+  box-shadow: 0 0 0 3px rgba(96, 180, 50, 0.25);
+  outline: none;
+}
+
+/* ── Dropdown ── */
+.dropdown-menu {
+  border-radius: 12px !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  padding: 6px !important;
+  min-width: 190px;
+}
+
+.dropdown-item {
+  border-radius: 8px;
+  font-size: 13.5px;
+  padding: 8px 12px;
+  transition: background 0.15s;
+  color: #2c3e50;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f7ff;
+  color: #185fa5;
+}
+
+.dropdown-divider {
+  margin: 4px 0 !important;
+}
+
+/* ── Modal ── */
+.modal {
+  z-index: 1055;
+}
+
+.modal-backdrop {
+  z-index: 1054;
+}
+
+.modal-content {
+  border-radius: 16px !important;
+  overflow: hidden;
+  border: none !important;
+}
+
+.modal-header {
+  padding: 1.25rem 1.5rem 1rem;
+}
+
+.modal-body {
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+/* ── Icon Badge ── */
+.icon-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+/* ── Form Controls ── */
+.form-control {
+  border-radius: 8px !important;
+  font-size: 13.5px;
+  border-color: #dce1e7;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 0.45rem 0.75rem;
+}
+
+.form-control:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.15);
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6c757d;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* ── Buttons ── */
+.btn {
+  border-radius: 8px !important;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.btn-success {
+  background-color: #198754;
+  border-color: #198754;
+}
+
+.btn-success:hover {
+  background-color: #157347;
+}
+
+.btn-primary:focus,
+.btn-success:focus {
+  box-shadow: none;
+}
+
+/* ── Toast ── */
+.toast-container {
+  z-index: 9999;
+}
+
+.toast {
+  border-radius: 10px !important;
+  font-size: 13.5px;
+  min-width: 240px;
+}
+
+/* ── Search Bar ── */
+.form-control-sm[type="search"] {
+  border-radius: 20px !important;
+  font-size: 13px;
+  padding: 0.3rem 0.85rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  width: 160px;
+  transition: width 0.3s, background 0.2s;
+}
+
+.form-control-sm[type="search"]::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.form-control-sm[type="search"]:focus {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+  width: 200px;
+  box-shadow: none;
+}
+
+/* ── Spinner ── */
+.spinner-border-sm {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+}
+
+/* ── Router outlet area ── */
+router-outlet + * {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 48px;
+  left: auto;
+  z-index: 1050;
+  display: block;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.input-group .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.input-group .form-control {
+  border-right: none;
+}
+
+/* Optional: Keep the border color consistent on focus */
+.input-group:focus-within .btn {
+  border-color: #86b7fe;
+}
