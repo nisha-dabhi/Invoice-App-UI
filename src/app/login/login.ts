@@ -12,6 +12,8 @@ import { CommonModule } from '@angular/common';
 })
 export class Login {
 
+  showPassword: boolean = false;
+
   loginData = {
     email: '',
     password: ''
@@ -38,5 +40,9 @@ export class Login {
         alert(err.error.message || 'Login failed');
       }
     });
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 }

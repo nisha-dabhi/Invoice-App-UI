@@ -1,192 +1,363 @@
-/* 🔥 Background */
+/* 🔥 Background Container */
 .auth-container {
-  height: 100vh;
-  background: linear-gradient(135deg, #49437a, #584e9b, #494279);
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(135deg, #c0b6e4, #a59cd4);
+  transition: 0.4s;
+  padding: 20px;
 }
 
-/* 🔥 Card */
+/* 🌙 Dark Background */
+.auth-container.dark {
+  background: linear-gradient(135deg, #433f66, #585275);
+}
+
+/* 🔥 Card Container */
 .auth-card {
-  width: 600px;
-  padding: 32px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 12px 45px rgba(0, 0, 0, 0.25);
+  width: 650px;
+  max-width: 100%;
+  padding: 36px;
+  border-radius: 24px;
+  transition: 0.4s;
+}
+
+/* 🌞 Light Card Style */
+.auth-container:not(.dark) .auth-card {
+  background: #d9d0f7;
+  box-shadow: 8px 8px 20px #c2bcdd, -8px -8px 20px #c4bde4;
+  color: #2f2f3a;
+}
+
+/* 🌙 Dark Card Style */
+.auth-container.dark .auth-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   color: #fff;
+}
+
+/* 🔹 Header Section */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+/* 🔹 Title Gradient */
+.auth-card h3 {
+  font-size: 22px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #7c5cff, #c84bef);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 🌙 Dark Title Gradient */
+.auth-container.dark .auth-card h3 {
+  background: linear-gradient(90deg, #a488ff, #e070ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 🔹 Theme Toggle Container */
+.theme-toggle {
+  width: 72px;
+  height: 34px;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
   transition: 0.3s;
 }
 
-/* 🔹 Title */
-.auth-card h3 {
-  font-weight: 600;
-  margin-bottom: 18px;
-  letter-spacing: 0.5px;
+/* 🌞 Light Toggle */
+.auth-container:not(.dark) .theme-toggle {
+  background: #ffffff;
+  box-shadow: 3px 3px 8px #c8c5d5, -3px -3px 8px #ffffff;
 }
 
-/* 🔹 Section Titles */
+/* 🌙 Dark Toggle */
+.auth-container.dark .theme-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* 🔹 Toggle Icon */
+.theme-toggle i {
+  font-size: 14px;
+  z-index: 2;
+}
+
+/* 🌞 Light Icon Color */
+.auth-container:not(.dark) .theme-toggle i {
+  color: #f5a623;
+}
+
+/* 🌙 Dark Icon Color */
+.auth-container.dark .theme-toggle i {
+  color: #c0b0ff;
+}
+
+/* 🔹 Toggle Ball */
+.toggle-ball {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  transition: 0.3s;
+  left: 4px;
+}
+
+/* 🌞 Light Ball */
+.auth-container:not(.dark) .toggle-ball {
+  background: linear-gradient(135deg, #a78bff, #7c5cff);
+  box-shadow: 2px 2px 6px rgba(124, 92, 255, 0.4);
+}
+
+/* 🌙 Dark Ball */
+.auth-container.dark .toggle-ball {
+  background: linear-gradient(135deg, #9d7fff, #7c5cff);
+  box-shadow: 0 0 12px rgba(124, 92, 255, 0.7);
+}
+
+/* 🔹 Toggle Movement */
+.toggle-ball.active {
+  left: 42px;
+}
+
+/* 🔹 Section Title */
 .section-title {
-  font-size: 13px;
-  font-weight: 600;
-  margin: 18px 0 10px;
-  opacity: 0.9;
+  margin-top: 16px;
+  margin-bottom: 14px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #2f2a4a;
 }
 
-/* 🔹 Label */
-.custom-label {
-  font-size: 12.5px;
-  margin-bottom: 6px;
+/* 🌙 Dark Section Title */
+.auth-container.dark .section-title {
+  color: #ffffff;
+}
+
+/* 🔹 Labels */
+label {
+  font-size: 13px;
+  margin-bottom: 5px;
   display: block;
-  color: rgba(255,255,255,0.85);
+}
+
+/* 🌞 Light Label */
+.auth-container:not(.dark) label {
+  color: #5a5570;
+}
+
+/* 🌙 Dark Label */
+.auth-container.dark label {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* 🔹 Input Wrapper */
 .input-wrap {
   position: relative;
+  margin-bottom: 16px;
 }
 
-/* 🔹 Icon */
-.input-icon {
+/* 🔹 Input Icon */
+.input-wrap i {
   position: absolute;
-  top: 50%;
   left: 12px;
+  top: 50%;
   transform: translateY(-50%);
-  color: rgba(255,255,255,0.6);
   font-size: 14px;
+  z-index: 1;
+}
+
+/* 🌞 Light Icon */
+.auth-container:not(.dark) .input-wrap i {
+  color: #a09abd;
+}
+
+/* 🌙 Dark Icon */
+.auth-container.dark .input-wrap i {
+  color: rgba(255, 255, 255, 0.45);
 }
 
 /* 🔹 Input Field */
 .custom-input {
   width: 100%;
-  padding: 11px 12px 11px 38px;
+  height: 42px;
+  padding: 0 45px 0 38px; /* Extra space for eye icon */
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.05);
-  color: #fff;
-  font-size: 14px;
-  transition: all 0.25s ease;
-}
-
-/* 🔹 Placeholder */
-.custom-input::placeholder {
-  color: rgba(255,255,255,0.65);
-}
-
-/* 🔹 Hover */
-.custom-input:hover {
-  border-color: rgba(255,255,255,0.5);
-}
-
-/* 🔹 Focus Effect */
-.custom-input:focus {
+  font-size: 13px;
+  transition: 0.25s;
   outline: none;
-  border-color: #ffffff;
-  background: rgba(255,255,255,0.08);
-  box-shadow: 0 0 10px rgba(255,255,255,0.4);
 }
 
-/* 🔴 Error Border */
+/* 🌞 Light Input */
+.auth-container:not(.dark) .custom-input {
+  background: #ede9f6;
+  border: 1.5px solid transparent;
+  box-shadow: inset 2px 2px 6px #ccc8da, inset -2px -2px 6px #ffffff;
+  color: #2f2a4a;
+}
+
+/* 🌞 Light Placeholder */
+.auth-container:not(.dark) .custom-input::placeholder {
+  color: #b0aac4;
+}
+
+/* 🌙 Dark Input */
+.auth-container.dark .custom-input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* 🌙 Dark Placeholder */
+.auth-container.dark .custom-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* 🌞 Light Focus */
+.auth-container:not(.dark) .custom-input:focus {
+  border-color: rgba(124, 92, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(127, 97, 248, 0.12);
+}
+
+/* 🌙 Dark Focus */
+.auth-container.dark .custom-input:focus {
+  border-color: rgba(157, 127, 255, 0.6);
+  box-shadow: 0 0 0 3px rgba(157, 127, 255, 0.15);
+}
+
+/* 🔴 Error State */
 .input-error {
   border-color: #ff4d4f !important;
-  box-shadow: 0 0 6px rgba(255, 77, 79, 0.5);
+  box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.15) !important;
 }
 
 /* 🔴 Error Message */
 .error-msg {
   font-size: 11.5px;
-  color: #ffb3b3;
-  margin-top: 4px;
+  margin-top: -10px;
+  margin-bottom: 10px;
 }
 
-/* 🔥 Button Container */
+/* 🌞 Light Error */
+.auth-container:not(.dark) .error-msg {
+  color: #e03535;
+}
+
+/* 🌙 Dark Error */
+.auth-container.dark .error-msg {
+  color: #ffb3b3;
+}
+
+/* 👁️ Eye Icon - Perfect integration */
+.eye {
+  position: absolute;
+  right: 30px;
+  top: 51.5%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 15px;
+  z-index: 3;
+  transition: 0.25s ease;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+/* 🔥 Eye Hover Effect */
+.eye:hover {
+  background: rgba(124, 92, 255, 0.15);
+  color: #7c5cff !important;
+  transform: translateY(-50%) scale(1.05);
+}
+
+/* 🌞 Light Eye Icon */
+.auth-container:not(.dark) .eye {
+  color: #a09abd;
+}
+
+/* 🌙 Dark Eye Icon */
+.auth-container.dark .eye {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* 🔹 Divider */
+hr {
+  border: none;
+  border-top: 1px solid rgba(124, 92, 255, 0.18);
+  margin: 20px 0 6px;
+}
+
+/* 🌙 Dark Divider */
+.auth-container.dark hr {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 🔹 Button Group */
 .btn-group-custom {
   display: flex;
-  gap: 12px;
-  margin-top: 28px;
-}
-
-/* 🔹 Common Button */
-.btn-premium {
-  flex: 1;
-  padding: 12px;
-  border-radius: 14px;
-  font-weight: 600;
-  font-size: 14px;
-  border: none;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-/* ✨ Shine Effect */
-.btn-premium::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -120%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
-  transition: 0.6s;
-}
-
-.btn-premium:hover::before {
-  left: 120%;
+  gap: 14px;
+  margin-top: 24px;
 }
 
 /* 🔹 Login Button */
 .btn-login {
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.4);
-  backdrop-filter: blur(10px);
+  flex: 1;
+  height: 46px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
 }
 
-.btn-login:hover {
-  background: #ffffff;
-  color: #5f5aa2;
-  transform: translateY(-2px);
+/* 🌞 Light Login */
+.auth-container:not(.dark) .btn-login {
+  border: 1.5px solid #cdc6e8;
+  color: #4a4468;
+  box-shadow: 3px 3px 8px #ccc8d8, -3px -3px 8px #ffffff;
+}
+
+/* 🌙 Dark Login */
+.auth-container.dark .btn-login {
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* 🔹 Register Button */
 .btn-register {
-  background: linear-gradient(45deg, #7b2ff7, #f107a3);
+  flex: 1;
+  height: 46px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #7c5cff, #d94fff);
   color: #fff;
-  box-shadow: 0 5px 18px rgba(123, 47, 247, 0.5);
-}
-
-.btn-register:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(123, 47, 247, 0.7);
-}
-
-/* 🔹 Disabled */
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* 👁 Toggle Icon */
-.toggle-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+  border: none;
+  box-shadow: 0 6px 18px rgba(124, 92, 255, 0.45);
   cursor: pointer;
-  z-index: 10;
-  color: rgba(255,255,255,0.7);
-}
-
-.toggle-icon:hover {
-  color: #fff;
 }
 
 /* 📱 Responsive */
 @media (max-width: 768px) {
   .auth-card {
     width: 95%;
-    padding: 20px;
+    padding: 22px;
+  }
+  
+  .custom-input {
+    padding: 0 42px 0 36px;
   }
 }

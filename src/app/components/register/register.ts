@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 export class AddRegister {
 
   registerForm!: FormGroup;
-
+  isDarkMode = true;
   showPassword: boolean = false;
 
   constructor(

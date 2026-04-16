@@ -8,6 +8,7 @@ import { CustomerService } from '../../services/customer-service';
 import { ProductService } from '../../services/product-service';
 import { ToastrService } from 'ngx-toastr';
 import { BillInfoService } from '../../services/bill-info-service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-bill',
@@ -346,9 +347,6 @@ export class AddBill implements OnInit {
 }
 
 
-
-
-
 // get groupedBills() {
 //   const groups: { [key: string]: { invoiceNo: string; customerName: string; companyName: string; date: any; dueDate: any; items: Bill[] } } = {};
 
@@ -401,3 +399,49 @@ export class AddBill implements OnInit {
 //     amount: b.amount
 //   });
 // }
+
+// selectedInvoiceGroup: any = null;
+// showDetailModal: boolean = false;
+
+// openDetailModal(group: any): void {
+//   this.selectedInvoiceGroup = group;
+//   this.showDetailModal = true;
+// }
+
+// closeDetailModal(): void {
+//   this.selectedInvoiceGroup = null;
+//   this.showDetailModal = false;
+// }
+
+// saveInvoiceToBillInfo(group: any): void {
+
+//   const requests = group.items.map((b: any) => {
+
+//     const billInfo: BillInfo = {
+//       id: 0,
+//       invoiceNo: b.invoiceNo,
+//       date: b.date,
+//       dueDate: b.dueDate,
+//       companyName: b.companyName,
+//       clientName: b.customerName,
+//       amount: b.amount
+//     };
+
+//     return this.billInfoService.addBillInfo(billInfo);
+//   });
+
+//   forkJoin(requests).subscribe({
+//     next: () => {
+//       this.toastr.success('Invoice saved successfully!', 'Success');
+//     },
+//     error: () => {
+//       this.toastr.error('Failed to save invoice', 'Error');
+//     }
+//   });
+
+// }
+// }
+
+
+
+

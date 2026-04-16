@@ -5,5 +5,6 @@ export interface BillInfo {
     dueDate : Date;
     clientName : string;
     companyName : string;
-    amount : number;
+    amount : number;    
+    compId?: number;
 }

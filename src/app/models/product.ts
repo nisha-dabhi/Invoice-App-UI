@@ -8,4 +8,5 @@ export interface Product {
     status : OrderStatus;
     category : string;
     price : number;
+    compId?: number;
 }

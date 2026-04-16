@@ -41,18 +41,20 @@
                     <div class="col-md-4 mb-5">
                         <label>Invoice Date <span class="text-danger">*</span></label>
                         <input type="date" class="form-control" formControlName="date" [max]="today"
-                            [class.is-invalid]="f['date'].invalid && f['date'].touched">
-                        <div class="text-danger" *ngIf="f['date'].invalid && f['date'].touched">
-                            <small>Date is required</small>
+                            [class.is-invalid]="f['date']?.invalid && f['date']?.touched">
+                        <div class="invalid-feedback" *ngIf="f['date']?.invalid && f['date']?.touched">
+                            <div *ngIf="f['date'].errors?.['required']">Date is required</div>
+                            <div *ngIf="f['date'].errors?.['max']">Future date not allowed</div>
                         </div>
                     </div>
 
                     <div class="col-md-4 mb-3">
                         <label>Due Date<span class="text-danger">*</span></label>
-                        <input type="date" class="form-control" formControlName="dueDate"
-                            [class.is-invalid]="f['dueDate'].invalid && f['dueDate'].touched">
-                        <div class="text-danger" *ngIf="f['dueDate'].invalid && f['dueDate'].touched">
-                            <small>Due Date is required</small>
+                        <input type="date" class="form-control" formControlName="dueDate" [min]="f['date'].value"
+                            [max]="today" [class.is-invalid]="f['dueDate']?.invalid && f['dueDate']?.touched">
+                        <div class="invalid-feedback" *ngIf="f['dueDate']?.invalid && f['dueDate']?.touched">
+                            <div *ngIf="f['dueDate'].errors?.['required']">Due Date is required</div>
+                            <div *ngIf="f['dueDate'].errors?.['max']">Future date not allowed</div>
                         </div>
                     </div>
 
@@ -162,7 +164,7 @@
                         <td>{{ b.disc }}</td>
                         <td>{{ b.tax }}</td>
                         <td>{{ b.amount }}</td>
-                        <td>                       
+                        <td>
                             <button class="btn btn-warning btn-sm me-1 my-1" (click)="editTempRow(i)">✏️ Edit</button>
                             <button class="btn btn-danger btn-sm me-1 my-1" (click)="removeTempRow(i)">❌ Remove</button>
                         </td>
@@ -175,10 +177,10 @@
             </div>
         </div>
     </div>
-
 </div>
 
-<!-- <div class="card shadow mt-2">
+
+ <!-- <div class="card shadow mt-2">
         <div class="card-header d-flex justify-content-between align-items-center"
             style="background: linear-gradient(135deg, #1a6b9a, #0d3b6e, #0a192f); color: white;">
             <strong>Bill List</strong>
@@ -258,4 +260,53 @@
                 </tbody>
             </table>
         </div>
-    </div> -->
+    </div>
+    <div class="modal fade show d-block" *ngIf="showDetailModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        Invoice Details - {{ selectedInvoiceGroup?.invoiceNo }}
+                    </h5>
+                    <button class="btn-close btn-close-white" (click)="closeDetailModal()"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <p><b>Customer:</b> {{ selectedInvoiceGroup?.customerName }}</p>
+                    <p><b>Company:</b> {{ selectedInvoiceGroup?.companyName }}</p>
+                    <p><b>Date:</b> {{ selectedInvoiceGroup?.date | date:'dd/MM/yyyy' }}</p>
+                    <p><b>Due Date:</b> {{ selectedInvoiceGroup?.dueDate | date:'dd/MM/yyyy' }}</p>
+
+                    <hr>
+
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Disc%</th>
+                                <th>Tax%</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let item of selectedInvoiceGroup?.items">
+                                <td>{{ item.productName }}</td>
+                                <td>{{ item.price }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.disc }}</td>
+                                <td>{{ item.tax }}</td>
+                                <td>{{ item.amount }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>  -->

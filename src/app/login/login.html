@@ -19,7 +19,7 @@
                         [(ngModel)]="loginData.email" #email="ngModel" required
                         [class.input-error]="email.invalid && (email.touched || loginForm.submitted)">
                 </div>
-                <div class="error-msg text-danger" *ngIf="email.invalid && email.touched">
+                <div class="error-msg text-danger" *ngIf="email.invalid && (email.touched || loginForm.submitted)">
                     <i class="bi bi-exclamation-circle-fill"></i>
                     <small *ngIf="email.errors?.['required']">Email is required</small>
                     <small *ngIf="email.errors?.['email']">Invalid email format</small>
@@ -29,12 +29,15 @@
             <div class="mb-4">
                 <label class="custom-label">Password</label>
                 <div class="input-wrap">
-                    <i class="bi bi-lock-fill input-icon"></i>
-                    <input type="password" name="password" class="custom-input" placeholder="Enter your password"
+                    <i class="bi bi-lock input-icon"></i>
+                    <input [type]="showPassword ? 'text' : 'password'"  name="password" class="custom-input" placeholder="Enter your password"
                         [(ngModel)]="loginData.password" #password="ngModel" required
                         [class.input-error]="password.invalid && (password.touched || loginForm.submitted)">
+                    <span class="eye" [class.active]="showPassword" (click)="togglePassword()">
+                        <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+                    </span>
                 </div>
-                <div class="error-msg text-danger" *ngIf="password.invalid && password.touched">
+                <div class="error-msg text-danger" *ngIf="password.invalid && (email.touched || loginForm.submitted)">
                     <i class="bi bi-exclamation-circle-fill"></i>
                     <small *ngIf="password.errors?.['required']">Password is required.</small>
                     <small *ngIf="password.errors?.['minlength']">Minimum 8 characters.</small>
