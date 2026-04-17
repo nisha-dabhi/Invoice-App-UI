@@ -47,7 +47,7 @@ export class AddCustomer implements OnInit {
       phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       email: ['', [Validators.required, Validators.email]],
       compId: ['', Validators.required],
-      companyName:  [''],
+      companyName: [''],
       address: ['', [Validators.required, Validators.minLength(5)]]
     });
   }
@@ -81,12 +81,15 @@ export class AddCustomer implements OnInit {
     };
     if (this.isEdit) {
       this.service.updateCustomer(this.editId, { ...formValue, id: this.editId }).subscribe(() => {
+        alert('Updated Successfully');
         this.toastr.success('Customer updated successfully!', 'Updated');
         this.loadCustomers();
         this.closeCard();
+        this.showForm = true;
       });
     } else {
       this.service.addCustomer(formValue).subscribe(() => {
+        alert('Customer added Successfully');
         this.toastr.success('Customer added successfully!', 'Success');
         this.loadCustomers();
         this.closeCard();
@@ -104,7 +107,7 @@ export class AddCustomer implements OnInit {
       phone: c.phone,
       email: c.email,
       compId: c.compId,
-      companyName:  c.companyName,
+      companyName: c.companyName,
       address: c.address
     });
     this.onCompIdChange();

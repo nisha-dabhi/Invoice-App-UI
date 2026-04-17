@@ -8,7 +8,6 @@ import { CustomerService } from '../../services/customer-service';
 import { ProductService } from '../../services/product-service';
 import { ToastrService } from 'ngx-toastr';
 import { BillInfoService } from '../../services/bill-info-service';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-bill',
@@ -439,7 +438,6 @@ export class AddBill implements OnInit {
 //     }
 //   });
 
-// }
 // }
 
 
